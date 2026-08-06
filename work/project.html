@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Project — Obys — Design &amp; Development Agency</title>
+<meta name="description" content="Project detail — Obys, a concept-driven design studio. Unofficial educational recreation of obys.agency." />
+<link rel="preconnect" href="https://api.fontshare.com" />
+<link rel="preconnect" href="https://cms.obys.agency" />
+<link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=general-sans@400,500,600&display=swap" />
+<link rel="stylesheet" href="/css/base.css" />
+<link rel="stylesheet" href="/css/components.css" />
+<link rel="stylesheet" href="/css/project.css" />
+</head>
+<body data-page="work">
+
+<div data-include-preloader></div>
+<div data-include-header></div>
+
+<main class="project">
+  <section class="project__hero">
+    <div class="project__meta">
+      <span class="project__meta-item project__meta-category" data-project-category></span>
+      <span class="project__meta-item project__meta-services" data-project-services></span>
+      <span class="project__meta-item project__meta-number" data-project-number></span>
+    </div>
+    <h1 class="project__heading" data-project-heading></h1>
+  </section>
+
+  <figure class="project__image">
+    <img data-project-image src="" alt="" loading="eager" />
+  </figure>
+
+  <section class="project__note">
+    <div class="project__note-label">
+      <p>About this page</p>
+    </div>
+    <div class="project__note-body">
+      <p class="project__note-text">
+        This is a personal, educational recreation of the Obys project page for
+        <strong data-project-name-inline></strong> — built by hand to study the studio's
+        design language. It is not affiliated with or endorsed by Obys, and no original
+        case-study content is reproduced here.
+      </p>
+      <a class="project__case-study-link" data-project-case-study-link href="https://obys.agency" target="_blank" rel="noopener">
+        <span>View the full case study on obys.agency</span>
+        <span class="project__case-study-arrow" aria-hidden="true">↗</span>
+      </a>
+    </div>
+  </section>
+
+  <nav class="project__pager" aria-label="Project navigation">
+    <a class="project__pager-link project__pager-link--prev" data-project-prev href="/work.html">
+      <span class="project__pager-arrow" aria-hidden="true">←</span>
+      <span class="project__pager-copy">
+        <span class="project__pager-label">Previous</span>
+        <span class="project__pager-name" data-project-prev-name></span>
+      </span>
+    </a>
+    <a class="project__pager-link project__pager-link--next" data-project-next href="/work.html">
+      <span class="project__pager-copy project__pager-copy--right">
+        <span class="project__pager-label">Next</span>
+        <span class="project__pager-name" data-project-next-name></span>
+      </span>
+      <span class="project__pager-arrow" aria-hidden="true">→</span>
+    </a>
+  </nav>
+
+  <div class="project__flourish" data-mark="bracket" aria-hidden="true"></div>
+</main>
+
+<div data-include-footer></div>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
+<script src="/js/svg-marks.js"></script>
+<script src="/js/data-projects.js"></script>
+<script src="/js/site.js"></script>
+<script src="/js/project.js"></script>
+</body>
+</html>

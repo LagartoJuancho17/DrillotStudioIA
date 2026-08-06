@@ -1,0 +1,291 @@
+/* ==========================================================================
+   Componentes compartidos: header, footer, preloader, modal de contacto
+   ========================================================================== */
+
+:root {
+  --col-right-w: 44rem;
+}
+
+/* ---------- Preloader ---------- */
+.preloader {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  background: var(--black);
+  color: var(--white);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.9s var(--ease-obys), visibility 0.9s;
+}
+
+.preloader__mark {
+  width: 6.4rem;
+  height: 6.4rem;
+  color: var(--white);
+  opacity: 0.85;
+  transform: scale(0.75);
+  transition: transform 1.6s var(--ease-obys), opacity 1.6s var(--ease-obys);
+}
+
+.preloader__mark svg { width: 100%; height: 100%; }
+
+.preloader__count {
+  position: fixed;
+  top: 3.2rem;
+  right: var(--edge);
+  font-size: 1.1rem;
+  letter-spacing: -0.01em;
+  font-variant-numeric: tabular-nums;
+}
+
+.preloader.is-done {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.preloader.is-done .preloader__mark {
+  transform: scale(1.15);
+}
+
+/* ---------- Header ---------- */
+.site-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 120;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 3.2rem var(--edge) 0;
+  mix-blend-mode: difference;
+  color: var(--white);
+  pointer-events: none;
+}
+
+.site-header a,
+.site-header button { pointer-events: auto; }
+
+.site-header__logo {
+  width: 19rem;
+  color: currentColor;
+  display: block;
+}
+.site-header__logo svg { width: 100%; height: auto; display: block; }
+
+.site-header__nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: var(--col-right-w);
+  font-size: 1.1rem;
+  padding-top: 0.6rem;
+}
+
+.site-header__links a {
+  opacity: 0.45;
+  transition: opacity 0.3s var(--ease-out-quad);
+}
+.site-header__links a:hover,
+.site-header__links a.is-on { opacity: 1; }
+.site-header__comma { opacity: 0.45; margin: 0 0.15em; }
+
+.site-header__clock {
+  opacity: 0.7;
+  font-variant-numeric: tabular-nums;
+}
+
+.site-header__contact {
+  opacity: 1;
+  position: relative;
+  padding-bottom: 0.2rem;
+}
+.site-header__contact::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(1);
+  transform-origin: right;
+  transition: transform 0.4s var(--ease-out-quad);
+}
+.site-header__contact:hover::after { transform: scaleX(0); }
+
+.site-header__burger {
+  display: none;
+  width: 2.6rem; height: 2rem;
+  flex-direction: column;
+  justify-content: space-between;
+  pointer-events: auto;
+  position: relative;
+  z-index: 130;
+}
+.site-header__burger span {
+  display: block;
+  height: 1px;
+  background: var(--white);
+  transition: transform 0.35s var(--ease-obys), opacity 0.35s;
+}
+
+@media (max-width: 900px) {
+  .site-header { padding: 2.4rem var(--edge) 0; align-items: center; }
+  .site-header__logo { width: 12rem; }
+  .site-header__burger { display: flex; }
+  .site-header__nav {
+    position: fixed;
+    inset: 0;
+    width: auto;
+    background: var(--black);
+    color: var(--white);
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 2.4rem;
+    padding: 0 var(--edge);
+    font-size: 3.2rem;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-1rem);
+    transition: opacity 0.4s var(--ease-obys), transform 0.4s var(--ease-obys), visibility 0.4s;
+  }
+
+  /* mix-blend-mode:difference vive en .site-header para que el logo/nav del
+     desktop auto-contraste contra cualquier fondo. Una vez el menú mobile
+     está abierto es un overlay opaco a pantalla completa: no hay "fondo
+     variable" contra el que auto-contrastar, así que el blend debe
+     desactivarse por completo o el overlay queda semitransparente
+     (isolation:isolate en el hijo NO alcanza: el blend del ancestro se
+     aplica quando .site-header completo compone contra SU backdrop). */
+  .site-header.menu-is-open {
+    mix-blend-mode: normal;
+  }
+  .site-header__links { flex-direction: column; align-items: flex-start; gap: 1.2rem; }
+  .site-header__comma { display: none; }
+  .site-header__clock { font-size: 1.6rem; }
+  .site-header__contact { font-size: 3.2rem; }
+  .menu-is-open .site-header__nav {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+  .menu-is-open .site-header__burger span:first-child { transform: translateY(0.45rem) rotate(45deg); }
+  .menu-is-open .site-header__burger span:last-child { transform: translateY(-0.45rem) rotate(-45deg); }
+}
+
+/* ---------- Footer ---------- */
+/* position:sticky, no fixed: en index.html (una sola pantalla) se comporta
+   igual que fixed. En páginas largas (about/work/project) evita que el
+   footer quede flotando permanentemente sobre el contenido final — con
+   fixed, cualquier elemento que terminara cerca del borde inferior del
+   viewport (que varía según alto de imagen, ventana, etc.) chocaba con él
+   sin importar cuánto padding se le agregara, porque fixed no respeta el
+   flujo del documento. Sticky sí: solo "flota" mientras aún no llegó a su
+   posición natural de fin de documento. */
+.site-footer {
+  position: sticky;
+  display: flex;
+  justify-content: flex-end;
+  margin-right: var(--edge);
+  bottom: 2.4rem;
+  z-index: 60;
+  font-size: 1.1rem;
+  color: var(--grey-mute);
+  pointer-events: none;
+}
+
+@media (max-width: 900px) {
+  .site-footer { left: var(--edge); right: var(--edge); bottom: 1.6rem; }
+}
+
+/* ---------- Modal de contacto ---------- */
+.contact-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 150;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.contact-modal__scrim {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  opacity: 0;
+  transition: opacity 0.5s var(--ease-obys);
+}
+
+.contact-modal__panel {
+  position: relative;
+  width: min(64rem, calc(100vw - 4rem));
+  background: var(--black);
+  color: var(--white);
+  padding: 6rem var(--edge) 5rem;
+  transform: translateY(2.4rem);
+  opacity: 0;
+  transition: transform 0.6s var(--ease-obys), opacity 0.6s var(--ease-obys);
+}
+
+.contact-modal.is-open .contact-modal__scrim { opacity: 1; }
+.contact-modal.is-open .contact-modal__panel { transform: translateY(0); opacity: 1; }
+
+.contact-modal__close {
+  position: absolute;
+  top: 2.4rem;
+  right: var(--edge);
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  font-size: 1.1rem;
+  color: var(--white);
+  opacity: 0.7;
+}
+.contact-modal__close:hover { opacity: 1; }
+.contact-modal__close i {
+  width: 1.1rem; height: 1.1rem;
+  position: relative;
+}
+.contact-modal__close i::before,
+.contact-modal__close i::after {
+  content: "";
+  position: absolute;
+  top: 50%; left: 0;
+  width: 100%; height: 1px;
+  background: currentColor;
+}
+.contact-modal__close i::before { transform: rotate(45deg); }
+.contact-modal__close i::after { transform: rotate(-45deg); }
+
+.contact-modal__eyebrow {
+  font-size: 1.3rem;
+  opacity: 0.55;
+  margin-bottom: 1.6rem;
+}
+
+.contact-modal__email {
+  display: inline-block;
+  font-size: 4.8rem;
+  letter-spacing: -0.02em;
+  margin-bottom: 4rem;
+  border-bottom: 1px solid rgba(255,255,255,0.25);
+}
+
+.contact-modal__grid {
+  display: flex;
+  gap: 6rem;
+  font-size: 1.2rem;
+}
+.contact-modal__col { display: flex; flex-direction: column; gap: 0.9rem; }
+.contact-modal__label { opacity: 0.5; margin-bottom: 0.2rem; }
+.contact-modal__col a { opacity: 0.75; }
+.contact-modal__col a:hover { opacity: 1; }
+
+@media (max-width: 640px) {
+  .contact-modal__email { font-size: 2.6rem; }
+  .contact-modal__grid { flex-direction: column; gap: 2rem; }
+}
+
+html.no-scroll, html.no-scroll body { overflow: hidden; height: 100%; }

@@ -1,0 +1,269 @@
+/* ==========================================================================
+   Home — layout de tres columnas (lista de trabajos / stage central / about)
+   ========================================================================== */
+
+:root {
+  --col-list-w: 24rem;
+  --col-about-w: var(--col-right-w);
+}
+
+.home {
+  position: relative;
+  min-height: 100vh;
+  background: var(--white);
+}
+
+/* La home es una experiencia de una sola pantalla: a diferencia de las
+   páginas largas (about/work/project), acá SÍ queremos que el footer quede
+   flotando siempre visible, sin importar si el contenido excede 100vh por
+   un margen chico. */
+.home ~ [data-include-footer] .site-footer {
+  position: fixed !important;
+  right: var(--edge);
+  margin-right: 0;
+}
+
+.home__grid {
+  position: relative;
+  display: grid;
+  grid-template-columns: var(--col-list-w) 1fr var(--col-about-w);
+  column-gap: 2rem;
+  align-items: stretch;
+  min-height: 100vh;
+  padding: calc(var(--header-h) + 13rem) var(--edge) 7rem;
+}
+
+/* ---------- Lista de trabajos (izquierda) ---------- */
+.home__list {
+  grid-column: 1;
+  align-self: center;
+}
+
+.home__list ul { display: flex; flex-direction: column; gap: 0.15rem; }
+
+.home__list a {
+  display: inline-block;
+  font-size: 1.3rem;
+  line-height: 1.55;
+  color: var(--black);
+  opacity: 0.35;
+  transition: opacity 0.35s var(--ease-out-quad);
+}
+
+.home__list li.is-active a,
+.home__list a:hover {
+  opacity: 1;
+}
+
+.home__list:hover a:not(:hover):not(.is-active a) { opacity: 0.25; }
+
+/* ---------- Stage central ---------- */
+.home__stage {
+  grid-column: 2;
+  align-self: center;
+  position: relative;
+  height: min(52rem, 68vh);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 22%, #000 78%, transparent 100%);
+  mask-image: linear-gradient(to bottom, transparent 0%, #000 22%, #000 78%, transparent 100%);
+}
+
+.home__mark {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 27rem;
+  height: 27rem;
+  transform: translate(-50%, -50%);
+  color: var(--black);
+  z-index: 1;
+  pointer-events: none;
+  transition: transform 1.2s var(--ease-obys);
+}
+
+.home__stage-mask {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 21.3rem;
+  background: var(--white);
+  z-index: 2;
+  pointer-events: none;
+}
+
+.home__filmstrip {
+  position: relative;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.2rem;
+  transition: transform 0.85s var(--ease-obys);
+  will-change: transform;
+}
+
+.home__filmstrip figure {
+  flex: none;
+  width: 20.5rem;
+  aspect-ratio: 4 / 5;
+  background: var(--white);
+  padding: 0.4rem;
+  opacity: 0.32;
+  filter: grayscale(1);
+  transform: scale(0.86);
+  transition: opacity 0.6s var(--ease-obys), filter 0.6s var(--ease-obys), transform 0.6s var(--ease-obys);
+}
+
+.home__filmstrip img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.home__filmstrip figure.is-active {
+  opacity: 1;
+  filter: grayscale(0);
+  transform: scale(1);
+}
+
+/* ---------- About (derecha) ---------- */
+.home__about {
+  grid-column: 3;
+  align-self: start;
+  padding-top: 0.4rem;
+  font-size: 1.3rem;
+  line-height: 1.5;
+}
+
+.home__about-copy { max-width: 40rem; margin-bottom: 2rem; }
+.home__contact-label { opacity: 0.45; margin-bottom: 0.2rem; }
+.home__contact-email {
+  display: inline-block;
+  border-bottom: 1px solid currentColor;
+}
+
+/* ---------- Meta row (categoría / servicios / número) ---------- */
+.home__meta {
+  position: absolute;
+  left: var(--edge);
+  right: var(--edge);
+  top: 0;
+  transform: translateY(-50%);
+  display: grid;
+  grid-template-columns: var(--col-list-w) 1fr var(--col-about-w);
+  column-gap: 2rem;
+  font-size: 1.1rem;
+  pointer-events: none;
+  opacity: 0;
+  transition: top 0.4s var(--ease-obys), opacity 0.4s var(--ease-out-quad);
+}
+.home__meta.is-visible { opacity: 1; }
+
+.home__meta-category { grid-column: 2; justify-self: start; align-self: center; }
+.home__meta-services-wrap {
+  grid-column: 3;
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+/* ---------- Bottom bar ---------- */
+.home__bottom {
+  position: fixed;
+  left: var(--edge);
+  bottom: 2.4rem;
+  z-index: 60;
+  font-size: 1.1rem;
+}
+
+.home__view-toggle { display: flex; gap: 0.2rem; }
+.home__view-toggle span { opacity: 0.35; }
+.home__view-toggle button { opacity: 0.35; transition: opacity 0.3s var(--ease-out-quad); }
+.home__view-toggle button.is-on,
+.home__view-toggle button:hover { opacity: 1; }
+.home__view-toggle button.is-on { text-decoration: underline; text-underline-offset: 0.25em; }
+
+/* ---------- Vista Horizontal ---------- */
+.home.view-horizontal .home__list ul {
+  flex-direction: row;
+  flex-wrap: nowrap;
+  gap: 3.2rem;
+  overflow-x: auto;
+  scrollbar-width: none;
+  padding-bottom: 0.4rem;
+}
+.home.view-horizontal .home__list ul::-webkit-scrollbar { display: none; }
+.home.view-horizontal .home__list a { white-space: nowrap; }
+.home.view-horizontal .home__grid {
+  grid-template-columns: minmax(0, 1fr);
+  padding-top: calc(var(--header-h) + 3rem);
+  row-gap: 2.4rem;
+  align-content: start;
+}
+.home.view-horizontal .home__list { grid-column: 1; order: 3; align-self: start; }
+.home.view-horizontal .home__stage { grid-column: 1; height: min(40rem, 50vh); }
+.home.view-horizontal .home__about { grid-column: 1; justify-self: end; text-align: right; align-self: start; }
+.home.view-horizontal .home__about-copy { margin-left: auto; }
+.home.view-horizontal .home__meta { display: none; }
+
+/* ---------- Vista Grid ---------- */
+.home__grid-view {
+  display: none;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem 2rem;
+  padding: calc(var(--header-h) + 3rem) var(--edge) 8rem;
+}
+.home.view-grid .home__grid { display: none; }
+.home.view-grid .home__grid-view { display: grid; }
+
+.home__grid-view a { display: block; }
+.home__grid-view figure {
+  position: relative;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  background: var(--grey-03);
+  margin-bottom: 1rem;
+}
+.home__grid-view img {
+  width: 100%; height: 100%; object-fit: cover;
+  filter: grayscale(1);
+  transform: scale(1.01);
+  transition: transform 0.7s var(--ease-obys), filter 0.5s var(--ease-obys);
+}
+.home__grid-view a:hover img { transform: scale(1.06); filter: grayscale(0); }
+.home__grid-view h3 { font-size: 1.4rem; margin-bottom: 0.3rem; }
+.home__grid-view p { font-size: 1.1rem; opacity: 0.5; }
+
+@media (max-width: 900px) {
+  .home__grid {
+    grid-template-columns: 1fr;
+    row-gap: 3.2rem;
+    padding: calc(var(--header-h) + 2rem) var(--edge) 10rem;
+    min-height: auto;
+  }
+  .home__list, .home__about { grid-column: 1; }
+  .home__stage { grid-column: 1; height: 34rem; order: -1; margin-bottom: 1rem; }
+  .home__mark { width: 20rem; height: 20rem; }
+  .home__filmstrip figure { width: 13rem; }
+  .home__meta { display: none; }
+  .home__list a { font-size: 1.8rem; }
+  .home__about { font-size: 1.6rem; }
+  .home__bottom {
+    background: var(--white);
+    padding: 1rem var(--edge) 0 0;
+    right: var(--edge);
+  }
+  .site-footer { background: var(--white); padding: 0.6rem 0 0; }
+  .home.view-horizontal .home__about { text-align: left; }
+  .home.view-horizontal .home__about-copy { margin-left: 0; }
+  .home__grid-view { grid-template-columns: 1fr 1fr; gap: 1.2rem; padding: calc(var(--header-h) + 2rem) var(--edge) 8rem; }
+}
+
+@media (max-width: 520px) {
+  .home__grid-view { grid-template-columns: 1fr; }
+}

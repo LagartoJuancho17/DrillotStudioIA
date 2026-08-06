@@ -1,0 +1,109 @@
+/* ==========================================================================
+   OBYS Agency — recreación
+   Sistema de diseño base: reset, escala tipográfica fluida, tokens de color
+   ========================================================================== */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html, body, div, span, h1, h2, h3, h4, h5, h6, p, a, ul, li, button, input, textarea, figure, figcaption {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font: inherit;
+  vertical-align: baseline;
+}
+
+ul { list-style: none; }
+a { text-decoration: none; color: inherit; }
+button { background: none; cursor: pointer; appearance: none; -webkit-appearance: none; }
+img { max-width: 100%; display: block; }
+svg { display: block; }
+
+/* --------------------------------------------------------------------------
+   Escala tipográfica fluida
+   El sitio real fija 1rem = 10px sobre un lienzo de diseño de 1440px y
+   escala todo con vw, por lo que el layout completo respira con el viewport
+   en vez de saltar entre breakpoints fijos.
+   -------------------------------------------------------------------------- */
+html {
+  font-size: 0.69444vw; /* 10px / 1440px * 100 */
+}
+
+@media (min-width: 1921px) {
+  html { font-size: 13.333px; } /* tope: no crece infinito en pantallas ultra anchas */
+}
+
+@media (max-width: 1024px) {
+  html { font-size: 1.28vw; } /* 10px / 780px * 100, tablet */
+}
+
+@media (max-width: 640px) {
+  html { font-size: 2.6667vw; } /* 10px / 375px * 100, mobile */
+}
+
+@media (max-width: 340px) {
+  html { font-size: 9.4px; }
+}
+
+:root {
+  --black: #000000;
+  --white: #ffffff;
+  --grey-01: #999999;
+  --grey-02: #c9c9c9;
+  --grey-03: #e4e4e4;
+  --grey-mute: #b3b3b3;
+  --overlay-05: rgba(0, 0, 0, 0.5);
+
+  --ease-obys: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-out-quad: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+
+  --header-h: 9.6rem;
+  --edge: 4rem;
+}
+
+@media (max-width: 640px) {
+  :root {
+    --header-h: 14rem;
+    --edge: 2rem;
+  }
+}
+
+body {
+  background: var(--black);
+  color: var(--black);
+  font-family: "General Sans", "Obys", Helvetica, Arial, sans-serif;
+  font-size: 1.1rem;
+  font-weight: 400;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+body.is-ready { background: var(--white); }
+
+.visually-hidden {
+  position: absolute !important;
+  width: 1px; height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+/* Utility: greyscale treatment used across all editorial photography */
+.grayscale-img {
+  filter: grayscale(1) contrast(1.02);
+}
+
+::selection {
+  background: var(--black);
+  color: var(--white);
+}
+
+/* Focus visibility kept minimal but present, for a11y */
+a:focus-visible,
+button:focus-visible {
+  outline: 1px solid var(--black);
+  outline-offset: 2px;
+}
