@@ -214,6 +214,17 @@
   justify-content: center;
 }
 
+/* El atributo `hidden` aplica display:none desde la hoja del navegador, que
+   pierde contra el display:flex de arriba. Sin esta regla el modal se renderiza
+   siempre: un overlay fijo a pantalla completa que, aunque invisible (el scrim
+   está en opacity:0), se come todos los clicks de la página. */
+.contact-modal[hidden] { display: none; }
+
+/* Al cerrar, `hidden` recién vuelve a ponerse cuando termina la transición de
+   500ms. Durante esa ventana el modal sigue ocupando la pantalla, así que se
+   le quitan los eventos de puntero mientras no esté abierto. */
+.contact-modal:not(.is-open) { pointer-events: none; }
+
 .contact-modal__scrim {
   position: absolute;
   inset: 0;

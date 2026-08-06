@@ -53,7 +53,15 @@
 
     function open() {
       modal.hidden = false;
-      requestAnimationFrame(() => modal.classList.add("is-open"));
+      /* Hay que dejar que el navegador registre el estado cerrado antes de
+         agregar la clase, o la transición no tiene desde dónde arrancar.
+         Se fuerza un reflow leyendo offsetHeight en vez de usar
+         requestAnimationFrame: rAF se frena cuando la pestaña no está
+         visible, y ahí el modal quedaba con `hidden` ya quitado y el scroll
+         bloqueado pero sin `is-open`, es decir invisible y sin poder
+         cerrarse. Un reflow síncrono no depende de la visibilidad. */
+      void modal.offsetHeight;
+      modal.classList.add("is-open");
       document.documentElement.classList.add("no-scroll");
     }
     function close() {
