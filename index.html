@@ -17,33 +17,36 @@
 <div data-include-preloader></div>
 <div data-include-header></div>
 
-<main class="home">
-  <div class="home__grid">
+<main class="home" data-home>
+  <div class="home__viewport">
+    <!-- Columna izquierda: nombres. Se desplaza en sincronía con la tira. -->
     <aside class="home__list" aria-label="Selected work">
-      <p class="home__list-heading visually-hidden">Selected Work</p>
-      <ul data-work-list></ul>
+      <div class="home__list-track" data-list-track></div>
     </aside>
 
-    <div class="home__stage" aria-hidden="true">
-      <div class="home__mark" data-mark="bracket"></div>
-      <div class="home__stage-mask"></div>
-      <div class="home__filmstrip" data-filmstrip></div>
+    <!-- Centro: tira de imágenes con bucle infinito + paréntesis fijo. -->
+    <div class="home__stage">
+      <div class="home__filmstrip" data-filmstrip aria-hidden="true"></div>
+      <div class="home__mark" data-mark="bracket" aria-hidden="true"></div>
     </div>
 
+    <!-- Derecha: texto del estudio. -->
     <aside class="home__about">
       <p class="home__about-copy">The studio is shaped by people who care deeply about design and the process behind. Each project becomes a case study and a meaningful part of our portfolio, developed with care and attention.</p>
       <p class="home__contact-label">Contact:</p>
       <a href="mailto:info@obys.agency" class="home__contact-email">info@obys.agency</a>
     </aside>
 
-    <div class="home__meta" data-meta>
+    <!-- Fila de metadatos, fija en el centro vertical junto al activo. -->
+    <div class="home__meta" data-meta aria-live="polite">
       <span class="home__meta-category" data-meta-category></span>
-      <span class="home__meta-services-wrap">
-        <span class="home__meta-services" data-meta-services></span>
-        <span class="home__meta-number" data-meta-number></span>
-      </span>
+      <span class="home__meta-services" data-meta-services></span>
+      <span class="home__meta-number" data-meta-number></span>
     </div>
   </div>
+
+  <!-- Vista Grid: scroll nativo, fuera del viewport interceptado. -->
+  <div class="home__grid-view" data-grid-view></div>
 
   <div class="home__bottom">
     <div class="home__view-toggle" data-view-toggle role="tablist" aria-label="Work view">
@@ -57,7 +60,6 @@
 <div data-include-footer></div>
 
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
 <script src="/js/svg-marks.js"></script>
 <script src="/js/data-projects.js"></script>
 <script src="/js/site.js"></script>
