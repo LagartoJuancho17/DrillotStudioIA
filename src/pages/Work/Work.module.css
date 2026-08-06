@@ -1,0 +1,33 @@
+.root {
+  position: relative;
+  background: var(--white);
+  color: var(--black);
+}
+
+.intro {
+  padding: calc(var(--header-h) + 6rem) var(--edge) 4rem;
+}
+
+.eyebrow {
+  display: flex;
+  justify-content: space-between;
+  font-size: 1.1rem;
+  opacity: 0.45;
+  margin-bottom: 1.4rem;
+}
+
+.title {
+  font-size: 5.6rem;
+  font-weight: 500;
+  letter-spacing: -0.03em;
+  line-height: 1;
+}
+
+@media (max-width: 900px) {
+  .intro {
+    padding: calc(var(--header-h) + 3rem) var(--edge) 3rem;
+  }
+  .title {
+    font-size: 3.6rem;
+  }
+}

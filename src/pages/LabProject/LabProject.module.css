@@ -1,0 +1,166 @@
+.root {
+  position: relative;
+  background: var(--white);
+  color: var(--black);
+}
+
+.hero {
+  padding: calc(var(--header-h) + 5rem) var(--edge) 4rem;
+}
+
+.meta {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 2rem;
+  font-size: 1.1rem;
+  opacity: 0.45;
+  margin-bottom: 3rem;
+}
+.metaNumber {
+  font-variant-numeric: tabular-nums;
+}
+
+.title {
+  font-size: 8.4rem;
+  font-weight: 500;
+  letter-spacing: -0.03em;
+  line-height: 0.98;
+  word-wrap: break-word;
+}
+
+/* Las imágenes a ancho completo y en color, apiladas: es una ficha para mirar
+   obra, no para leer. */
+.images {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  padding: 0 var(--edge);
+}
+
+.figure {
+  position: relative;
+  overflow: hidden;
+  background: var(--grey-03);
+  opacity: 0;
+  transform: translateY(2.4rem);
+  transition: opacity 0.7s var(--ease-out-quad), transform 0.7s var(--ease-obys);
+}
+.figureIn {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.figure img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.index {
+  position: absolute;
+  top: 1.6rem;
+  right: 1.6rem;
+  font-size: 1.1rem;
+  color: var(--white);
+  mix-blend-mode: difference;
+  font-variant-numeric: tabular-nums;
+  pointer-events: none;
+}
+
+/* ---------- Paginador ---------- */
+.pager {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+  margin-top: 8rem;
+  padding: 3rem var(--edge) 11rem;
+  border-top: 1px solid var(--grey-03);
+  font-size: 1.6rem;
+}
+
+.pagerLink {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+  max-width: 44%;
+  opacity: 0.55;
+  transition: opacity 0.3s var(--ease-out-quad);
+}
+.pagerLink:hover {
+  opacity: 1;
+}
+.pagerNext {
+  text-align: right;
+  justify-content: flex-end;
+  margin-left: auto;
+}
+
+.pagerCopy {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  min-width: 0;
+}
+.pagerCopyRight {
+  align-items: flex-end;
+}
+.pagerLabel {
+  font-size: 1.1rem;
+  opacity: 0.6;
+}
+.pagerName {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.pagerArrow {
+  flex: none;
+  font-size: 1.8rem;
+}
+
+.back {
+  display: inline-block;
+  margin-top: 2.4rem;
+  font-size: 1.3rem;
+  opacity: 0.55;
+  border-bottom: 1px solid currentColor;
+}
+.back:hover {
+  opacity: 1;
+}
+
+@media (max-width: 900px) {
+  .hero {
+    padding: calc(var(--header-h) + 3rem) var(--edge) 3rem;
+  }
+  .meta {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.6rem;
+    margin-bottom: 2.4rem;
+  }
+  .title {
+    font-size: 4.4rem;
+    letter-spacing: -0.02em;
+  }
+  .images {
+    gap: 1.2rem;
+  }
+  .pager {
+    margin-top: 5rem;
+    padding: 2.4rem var(--edge) 8rem;
+  }
+  .pagerLink {
+    max-width: 48%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .figure {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}

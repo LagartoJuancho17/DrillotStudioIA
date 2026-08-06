@@ -1,0 +1,206 @@
+/* Contrapunto al resto del sitio: acá las imágenes nunca se desaturan. El
+   hover no agrega color, hace lo contrario: apaga TODA la grilla menos la
+   pieza apuntada. Por eso la regla vive en el contenedor, no en el item:
+   necesita alcanzar a los hermanos. */
+
+.root {
+  position: relative;
+  background: var(--white);
+  color: var(--black);
+}
+
+.intro {
+  padding: calc(var(--header-h) + 8rem) var(--edge) 0;
+}
+
+.eyebrow {
+  font-size: 1.1rem;
+  opacity: 0.45;
+  margin-bottom: 1.4rem;
+  display: flex;
+  gap: 1.2rem;
+}
+
+.count {
+  opacity: 0.6;
+}
+
+.lead {
+  max-width: 62rem;
+  font-size: 1.8rem;
+  line-height: 1.5;
+  letter-spacing: -0.01em;
+  margin-bottom: 6rem;
+}
+
+.gallery {
+  columns: 2;
+  column-gap: 2rem;
+  padding: 0 var(--edge) 12rem;
+}
+
+.item {
+  position: relative;
+  display: block;
+  break-inside: avoid;
+  margin-bottom: 2rem;
+  color: inherit;
+  /* Sube en hover para pasar por encima de las vecinas al levantarse. */
+  z-index: 0;
+  opacity: 0;
+  transform: translateY(2.4rem);
+  transition: opacity 0.55s var(--ease-out-quad), transform 0.55s var(--ease-obys),
+    filter 0.45s var(--ease-out-quad);
+}
+
+/* Sin JS o sin IntersectionObserver la grilla se ve igual: nunca queda en 0. */
+.itemIn {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.media {
+  position: relative;
+  overflow: hidden;
+  background: var(--grey-03);
+  box-shadow: 0 0 0 rgba(0, 0, 0, 0);
+  transition: box-shadow 0.55s var(--ease-obys);
+}
+
+.item img {
+  width: 100%;
+  height: auto;
+  display: block;
+  /* A color siempre: es la diferencia con la galería de About. */
+  transform: scale(1.02);
+  transition: transform 0.7s var(--ease-obys), filter 0.5s var(--ease-out-quad);
+}
+
+/* Todo lo no apuntado se apaga y pierde color. */
+.gallery:hover .itemIn:not(:hover) {
+  opacity: 0.28;
+  filter: saturate(0.15);
+  transform: scale(0.985);
+}
+
+/* La pieza apuntada se levanta, satura y toma el frente. */
+.gallery .itemIn:hover,
+.itemOpen {
+  z-index: 2;
+  transform: translateY(-0.8rem);
+}
+
+.item:hover .media,
+.itemOpen .media {
+  box-shadow: 0 2.4rem 5rem rgba(0, 0, 0, 0.28);
+}
+
+.item:hover img,
+.itemOpen img {
+  transform: scale(1.06);
+  filter: saturate(1.35) contrast(1.06);
+}
+
+.item:focus-visible {
+  outline: 2px solid var(--black);
+  outline-offset: 4px;
+}
+
+.caption {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  padding: 6rem 2rem 2rem;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.82), rgba(0, 0, 0, 0));
+  color: var(--white);
+  font-size: 1.3rem;
+  line-height: 1.4;
+  opacity: 0;
+  transform: translateY(1rem);
+  transition: opacity 0.4s var(--ease-out-quad), transform 0.5s var(--ease-obys);
+  pointer-events: none;
+}
+
+.item:hover .caption,
+.itemOpen .caption {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.captionTitle {
+  font-weight: 500;
+  font-size: 1.8rem;
+}
+.captionMeta {
+  opacity: 0.75;
+  font-size: 1.2rem;
+}
+
+.year {
+  position: absolute;
+  top: -0.2rem;
+  right: 0;
+  font-size: 1.1rem;
+  opacity: 0;
+  transform: translateY(-0.6rem);
+  font-variant-numeric: tabular-nums;
+  transition: opacity 0.4s var(--ease-out-quad), transform 0.4s var(--ease-obys);
+  pointer-events: none;
+}
+.item:hover .year,
+.itemOpen .year {
+  opacity: 0.55;
+  transform: translateY(-1.4rem);
+}
+
+.empty {
+  padding: 0 var(--edge) 12rem;
+  font-size: 1.4rem;
+  opacity: 0.6;
+}
+.empty code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  background: var(--grey-03);
+  padding: 0.2em 0.4em;
+}
+
+@media (max-width: 900px) {
+  .intro {
+    padding: calc(var(--header-h) + 3rem) var(--edge) 0;
+  }
+  .lead {
+    font-size: 1.6rem;
+    margin-bottom: 3.2rem;
+  }
+  .gallery {
+    columns: 1;
+    padding: 0 var(--edge) 8rem;
+  }
+  .item {
+    margin-bottom: 1.6rem;
+  }
+  /* En touch apagar los hermanos molesta más de lo que aporta. */
+  .gallery:hover .itemIn:not(:hover) {
+    opacity: 1;
+    filter: none;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .item,
+  .item img,
+  .caption,
+  .year,
+  .media {
+    transition-duration: 0.01ms !important;
+  }
+  .item {
+    opacity: 1;
+    transform: none;
+  }
+}

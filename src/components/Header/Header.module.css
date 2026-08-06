@@ -1,0 +1,159 @@
+/* mix-blend-mode: difference hace que el logo y el nav se auto-contrasten
+   contra cualquier fondo, claro u oscuro, sin tener que saber qué hay debajo. */
+.root {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 120;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 3.2rem var(--edge) 0;
+  mix-blend-mode: difference;
+  color: var(--white);
+  pointer-events: none;
+}
+
+.root a,
+.root button {
+  pointer-events: auto;
+}
+
+.logo {
+  width: 19rem;
+  color: currentColor;
+  display: block;
+}
+.logo svg {
+  width: 100%;
+  height: auto;
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  gap: 6rem;
+  font-size: 1.1rem;
+  padding-top: 0.6rem;
+}
+
+.links {
+  display: flex;
+  align-items: baseline;
+}
+
+.links a {
+  opacity: 0.45;
+  transition: opacity 0.3s var(--ease-out-quad);
+}
+.links a:hover,
+.links a.active {
+  opacity: 1;
+}
+
+.comma {
+  opacity: 0.45;
+  margin: 0 0.15em;
+}
+
+.contact {
+  position: relative;
+  padding-bottom: 0.2rem;
+  color: inherit;
+}
+.contact::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(1);
+  transform-origin: right;
+  transition: transform 0.4s var(--ease-out-quad);
+}
+.contact:hover::after {
+  transform: scaleX(0);
+}
+
+.burger {
+  display: none;
+  width: 2.6rem;
+  height: 2rem;
+  flex-direction: column;
+  justify-content: space-between;
+  pointer-events: auto;
+  position: relative;
+  z-index: 130;
+}
+.burger span {
+  display: block;
+  height: 1px;
+  background: currentColor;
+  transition: transform 0.35s var(--ease-obys);
+}
+
+@media (max-width: 900px) {
+  .root {
+    padding: 2.4rem var(--edge) 0;
+    align-items: center;
+  }
+  .logo {
+    width: 12rem;
+  }
+  .burger {
+    display: flex;
+  }
+
+  /* Con el menú abierto el overlay es opaco y a pantalla completa: ya no hay
+     fondo variable contra el que auto-contrastar, así que el blend tiene que
+     apagarse o el panel se ve semitransparente. */
+  .rootOpen {
+    mix-blend-mode: normal;
+    color: var(--white);
+  }
+
+  .nav {
+    position: fixed;
+    inset: 0;
+    background: var(--black);
+    color: var(--white);
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 2.4rem;
+    padding: 0 var(--edge);
+    font-size: 3.2rem;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-1rem);
+    transition: opacity 0.4s var(--ease-obys), transform 0.4s var(--ease-obys),
+      visibility 0.4s;
+  }
+  .links {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1.2rem;
+  }
+  .comma {
+    display: none;
+  }
+  .contact {
+    font-size: 3.2rem;
+  }
+
+  .navOpen {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+
+  .rootOpen .burger span:first-child {
+    transform: translateY(0.45rem) rotate(45deg);
+  }
+  .rootOpen .burger span:last-child {
+    transform: translateY(-0.45rem) rotate(-45deg);
+  }
+}

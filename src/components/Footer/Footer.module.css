@@ -1,0 +1,30 @@
+/* position: sticky, no fixed. En páginas largas, fixed deja el footer flotando
+   permanentemente sobre el contenido final y choca con lo último de la página
+   sin importar cuánto padding se agregue, porque no respeta el flujo del
+   documento. Sticky sólo flota mientras no llegó a su lugar natural. */
+.root {
+  position: sticky;
+  bottom: 2.4rem;
+  z-index: 60;
+  display: flex;
+  justify-content: flex-end;
+  margin-right: var(--edge);
+  font-size: 1.1rem;
+  color: var(--grey-mute);
+  pointer-events: none;
+}
+
+/* La home es una sola pantalla: ahí sí queremos el footer siempre visible. */
+.fixed {
+  position: fixed;
+  right: var(--edge);
+  bottom: 2.4rem;
+  margin-right: 0;
+}
+
+@media (max-width: 900px) {
+  .root {
+    margin-right: var(--edge);
+    bottom: 1.6rem;
+  }
+}

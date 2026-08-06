@@ -1,67 +1,103 @@
-# Obys Agency — recreación
+# DrillotStudioIA
 
-Recreación personal, con fines de estudio, del sitio [obys.agency](https://obys.agency). HTML/CSS/JS vanilla, sin build step. No está afiliada a ni respaldada por Obys.
+Recreación personal, con fines de estudio, del sitio [obys.agency](https://obys.agency), más una sección **Lab** propia para mini proyectos. React + Vite. No está afiliada a ni respaldada por Obys.
 
-## Correr el sitio
-
-Necesita servirse por HTTP (usa `fetch()` para los partials de header/footer/preloader — no funciona abriendo los `.html` directo con `file://`).
+## Correr el proyecto
 
 ```bash
-cd /Users/tobiasarraiza/obys-agency-clone && python3 serve.py
+npm install
+npm run dev
 ```
 
-Luego abrir `http://localhost:4123`.
+Queda en `http://localhost:4123`. Para el build de producción: `npm run build` y `npm run preview`.
 
-Se usa `serve.py` en vez de `python3 -m http.server` porque este último no manda cabeceras de caché: el navegador aplica su heurística, se queda con copias viejas de css/js/partials y editás un archivo, recargás y seguís viendo lo anterior. `serve.py` fuerza `no-store` en todo, así cada recarga trae lo que está en disco.
+## Rutas
 
-## Qué incluye
+| Ruta | Qué es |
+|---|---|
+| `/` | Home: carrusel infinito con scroll interceptado |
+| `/about` | Estudio, galería y datos |
+| `/work` | Índice de los 19 proyectos |
+| `/work/:slug` | Ficha de proyecto |
+| `/lab` | **Propio.** Grilla de mini proyectos a color |
+| `/lab/:slug` | Ficha de un mini proyecto |
 
-- **`index.html`** — home: intro animada + carrusel infinito con scroll interceptado (ver abajo), header con reloj en vivo (hora de Ámsterdam), selector de vista Vertical/Horizontal/Grid, modal de contacto.
+## Agregar un mini proyecto a Lab
 
-### Las dos mecánicas que definen la home
+Dos pasos, sin tocar ningún componente:
 
-Ambas replican el comportamiento medido sobre el sitio real, no una aproximación:
+1. Poné las imágenes en `public/img/lab/<slug>/`
+2. Sumá una entrada en [`src/data/labProjects.js`](src/data/labProjects.js)
 
-**1. Intro (`js/site.js` → `runPreloader`).** Timeline de GSAP de 3.65s: el contador va de 0 a 100 mientras la marca se dibuja primero solo con trazo y después se rellena; luego el fondo pasa de negro a blanco, la marca invierte a negro y **sus dos mitades se abren hacia los costados** hasta convertirse en el `( )` que enmarca la imagen activa. La marca del preloader y el paréntesis de la home son el mismo objeto: uno se transforma en el otro.
+```js
+{
+  slug: "miProyecto",
+  name: "Mi Proyecto",
+  category: "Ilustración",   // opcional
+  year: "2026",              // opcional
+  cover: { src: "/img/lab/miProyecto/portada.jpg", w: 2848, h: 1696 },
+  images: [
+    { src: "/img/lab/miProyecto/img1.jpg", w: 2848, h: 1696 },
+  ],
+}
+```
 
-Para volver a verla sin limpiar `sessionStorage`: `http://localhost:4123/?intro=1`. Sin ese parámetro se muestra una vez por sesión (igual que el sitio real) y respeta `prefers-reduced-motion`.
+La grilla, la ficha y la navegación anterior/siguiente se arman solas.
 
-**2. Scroll interceptado (`js/home.js`).** La home **no scrollea de forma nativa**: el `body` mide exactamente el alto del viewport, igual que el original. El `wheel`/`touch` alimenta una posición virtual con interpolación que desplaza la tira de imágenes, y el proyecto activo queda **siempre centrado**. En sincronía se mueven la lista de nombres y la fila de metadatos (categoría / servicios / número).
+Conviene poner `w` y `h`: reservan la caja antes de que cargue la imagen y evitan que la grilla salte. Se sacan con `sips -g pixelWidth -g pixelHeight archivo.jpg`.
 
-El bucle es infinito: se renderizan **tres copias** de los 19 proyectos y se navega sobre la del medio, así siempre hay contenido real arriba y abajo del centro y al envolver la posición el salto es invisible. Las imágenes alternan los cinco formatos del sitio original (`aspect-ratio` y ancho en ciclo), no una grilla uniforme.
+Para las imágenes, WebP o JPG con el lado largo en ~1600px alcanza. Las de `newArt` están en 2848px y ~1MB cada una: se ven bien pero hacen la página más pesada de lo necesario.
 
-Se puede navegar con rueda, gesto táctil, flechas del teclado o haciendo click en un nombre de la lista (va por el camino más corto del anillo).
-
-**Snap.** Cuando el input se aquieta (140ms sin eventos, o al levantar el dedo) el carrusel encaja en el proyecto más cercano, así nunca queda a mitad de camino entre dos. El cálculo se hace sobre el destino del scroll y no sobre la posición actual: como la posición viene interpolando, medir ahí elegiría un proyecto ya superado y se sentiría como un tirón hacia atrás. Al ser circular, evalúa cada centro también desplazado ±una vuelta, de modo que cerca del final el más cercano puede ser el primero de la copia siguiente.
-- **`about.html`** — founders, copy real del sitio, galería editorial de 21 fotos del estudio, columnas de datos (servicios, industrias, premios, charlas, prensa).
-- **`work.html`** — grid con los 19 proyectos reales listados en el sitio.
-- **`work/project.html?slug=<slug>`** — plantilla única reutilizada para las 19 páginas de proyecto (hero, imagen, navegación prev/next con wraparound).
-- **`lab.html`** — **agregado propio, no existe en obys.agency.** Galería masonry con las mismas imágenes reales del sitio pero a color pleno, como contrapunto al blanco y negro del resto. El resto de las páginas recrea el original; esta no.
-
-## Decisiones y desvíos honestos respecto al sitio real
-
-- **Tipografía**: el sitio real usa una fuente propietaria (`OTF Obys NG` / `ObysSans4.woff2`) que no se puede redistribuir. Se usa **General Sans** (Fontshare, gratuita) como sustituto visual más cercano.
-- **Imágenes**: se enlazan directo al CDN público del estudio (`cms.obys.agency`) — son las mismas URLs que sirve el sitio original, no se copió ni redistribuyó ningún archivo.
-- **Marca "( )"** y wordmark "OBYS®": se recrearon con los mismos paths SVG que usa el sitio real (geometría pura, sin tipografía embebida).
-- **Páginas de proyecto**: no investigué el diseño real de las 19 case studies individuales (fuera de alcance). La plantilla usa los datos reales (categoría, servicios, número, imagen de portada) y linkea honestamente a la case study real en obys.agency en vez de inventar contenido de cliente falso.
-- **Vista "Horizontal"** del toggle: usa el mismo motor de scroll interceptado sobre el eje X. Es interpretación propia — no capturé el comportamiento exacto del sitio real en ese estado.
-- **Reloj del header**: el sitio real muestra la hora del estudio (CEST) en el header. Acá se quitó a pedido.
-- **`lab.html`**: página inventada, no forma parte del sitio original. Usa las imágenes reales del CDN pero la página en sí es diseño propio; las fichas sólo repiten datos que ya estaban en el sitio (nombre de proyecto, categoría, lugar, año), no se inventó trabajo de cliente.
-- **Constantes de scroll** (velocidad de rueda, factor de interpolación): ajustadas a ojo para que se sienta parecido. La *mecánica* (intercepción, bucle de 3 copias, activo centrado, formatos en ciclo) sí está medida del sitio real; estos números concretos no.
-- **Escala tipográfica fluida**: replica la técnica real (`html { font-size: 0.6944vw }`, 1rem = 10px sobre un lienzo de diseño de 1440px), medida directamente del sitio original.
-
-## Estructura
+## Arquitectura
 
 ```
-css/base.css         reset + escala tipográfica fluida + tokens de color
-css/components.css   header, footer, preloader, modal de contacto, menú mobile
-css/home.css         layout de la home
-css/about.css        layout de about
-css/work.css         grid de trabajos
-css/project.css      plantilla de proyecto
-js/site.js           boot compartido: partials, reloj, modal, menú, preloader
-js/svg-marks.js       paths SVG de la wordmark y la marca "( )"
-js/data-projects.js  datos de los 19 proyectos (nombre, categoría, servicios, imagen)
-js/home.js / about.js / work.js / project.js   interacción específica de cada página
-partials/            header.html, footer.html, preloader.html (inyectados vía fetch)
+src/
+  main.jsx           entry: router + estilos globales
+  App.jsx            rutas, cada una en su propio chunk (lazy)
+  containers/
+    Layout.jsx       cascarón: header, footer y modal, fuera del Outlet
+  components/        presentacionales, reusables entre páginas
+    Header/ Footer/ Preloader/ ContactModal/ Marks.jsx
+  pages/             una carpeta por ruta, con su CSS Module al lado
+  hooks/
+    useCarousel      motor del carrusel de la home
+    useLockBodyScroll  bloqueo de scroll con contador de consumidores
+    useReveal        aparición al entrar en viewport
+  data/              contenido, separado de la presentación
+  styles/tokens.css  único CSS global: reset, escala fluida y variables
 ```
+
+**Estilos:** CSS Modules por componente, con un solo global (`tokens.css`) para el reset, las variables y la escala tipográfica. Nada de colisiones de nombres y cada ruta descarga sólo su CSS.
+
+**Decisiones de rendimiento:**
+
+- Cada ruta es un `lazy()` aparte, y GSAP va en su propio chunk porque sólo lo usa la intro. Entrar a Lab no descarga el código de la home.
+- El carrusel escribe los `transform` directo sobre el nodo con refs dentro del `requestAnimationFrame`. React sólo se entera cuando cambia el proyecto activo: un `useState` por frame serían 60 renders por segundo de toda la página.
+- El rAF se apaga solo cuando la posición se asienta y vuelve a arrancar con el próximo input.
+- Las diapositivas y las tarjetas están memoizadas: al cambiar el activo se re-renderizan las dos que cambian de estado, no las 57 del bucle.
+- El header y el modal viven fuera del `Outlet`, así sobreviven a los cambios de ruta sin volver a montarse.
+
+## Las dos mecánicas de la home
+
+Ambas replican comportamiento medido sobre el sitio real, no una aproximación.
+
+**Intro.** Timeline de 3.65s: el contador va de 0 a 100 mientras la marca se dibuja primero con trazo y después se rellena; luego el fondo pasa de negro a blanco y **las dos mitades de la marca se abren** hasta convertirse en el `( )` que enmarca la imagen activa. La marca del preloader y el paréntesis de la home son el mismo objeto.
+
+Se muestra una vez por sesión. Para repetirla: `http://localhost:4123/?intro=1`.
+
+**Scroll interceptado.** La home no scrollea de forma nativa: el `body` mide exactamente el alto del viewport, igual que el original. La rueda alimenta una posición virtual interpolada y el proyecto activo queda siempre centrado, con la lista de nombres y los metadatos en sincronía.
+
+El bucle es infinito: se renderizan **tres copias** de los 19 proyectos y se navega la del medio, así siempre hay contenido real arriba y abajo del centro y al envolver la posición el salto es invisible. Las imágenes alternan los cinco formatos del original, no una grilla uniforme.
+
+Al soltar el scroll encaja en el proyecto más cercano. La distancia se mide sobre el destino y no sobre la posición actual: como la posición viene interpolando, medir ahí elegiría un proyecto ya superado y se sentiría como un tirón hacia atrás.
+
+Se navega con rueda, gesto táctil, flechas del teclado o clickeando un nombre.
+
+## Qué es recreación y qué es propio
+
+- **Propio:** toda la sección `/lab`, incluidas las imágenes de `newArt`.
+- **Recreación:** el resto. Copy y datos son los reales del sitio; las portadas de proyecto y las fotos de About se enlazan al CDN público de Obys (`cms.obys.agency`), las mismas URLs que sirve el sitio original. No son material propio: si esto sale a algún lado, reemplazalas.
+- **Tipografía:** el original usa una fuente propietaria (`OTF Obys NG`) que no se puede redistribuir. Se usa **General Sans** (Fontshare) como sustituto.
+- **Fichas de proyecto:** no se inventó contenido de caso de estudio. Cada una dice qué es y enlaza al caso real en obys.agency.
+- **Reloj del header:** el sitio real muestra la hora del estudio. Acá se quitó a pedido.
+- **Vista Horizontal** del toggle y las constantes de velocidad e interpolación del scroll: interpretación propia. La mecánica sí está medida del original; esos números concretos se ajustaron a ojo.

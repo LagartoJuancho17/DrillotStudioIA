@@ -1,0 +1,154 @@
+/* ==========================================================================
+   Tokens y reset. Único CSS global del proyecto: todo lo demás vive en
+   CSS Modules junto a su componente.
+   ========================================================================== */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body,
+div,
+span,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+a,
+ul,
+li,
+button,
+input,
+textarea,
+figure,
+figcaption {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font: inherit;
+  vertical-align: baseline;
+}
+
+ul {
+  list-style: none;
+}
+a {
+  text-decoration: none;
+  color: inherit;
+}
+button {
+  background: none;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+}
+img {
+  max-width: 100%;
+  display: block;
+}
+svg {
+  display: block;
+}
+
+/* --------------------------------------------------------------------------
+   Escala tipográfica fluida.
+   1rem = 10px sobre un lienzo de diseño de 1440px y todo escala con vw, así el
+   layout respira con el viewport en vez de saltar entre breakpoints fijos.
+   -------------------------------------------------------------------------- */
+html {
+  font-size: 0.69444vw; /* 10 / 1440 * 100 */
+}
+
+@media (min-width: 1921px) {
+  html {
+    font-size: 13.333px; /* tope: no crece infinito en pantallas ultra anchas */
+  }
+}
+
+@media (max-width: 1024px) {
+  html {
+    font-size: 1.28vw;
+  }
+}
+
+@media (max-width: 640px) {
+  html {
+    font-size: 2.6667vw;
+  }
+}
+
+@media (max-width: 340px) {
+  html {
+    font-size: 9.4px;
+  }
+}
+
+:root {
+  --black: #000000;
+  --white: #ffffff;
+  --grey-01: #999999;
+  --grey-02: #c9c9c9;
+  --grey-03: #e4e4e4;
+  --grey-mute: #b3b3b3;
+
+  --ease-obys: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-out-quad: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+
+  --header-h: 9.6rem;
+  --edge: 4rem;
+  --col-right-w: 44rem;
+  --col-list-w: 24rem;
+}
+
+@media (max-width: 640px) {
+  :root {
+    --header-h: 14rem;
+    --edge: 2rem;
+  }
+}
+
+body {
+  background: var(--white);
+  color: var(--black);
+  font-family: "General Sans", Helvetica, Arial, sans-serif;
+  font-size: 1.1rem;
+  font-weight: 400;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+::selection {
+  background: var(--black);
+  color: var(--white);
+}
+
+a:focus-visible,
+button:focus-visible {
+  outline: 1px solid currentColor;
+  outline-offset: 2px;
+}
+
+.visually-hidden {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+/* Bloqueo de scroll para modales y para la home, que intercepta la rueda. */
+html.is-locked,
+html.is-locked body {
+  overflow: hidden;
+  height: 100%;
+}

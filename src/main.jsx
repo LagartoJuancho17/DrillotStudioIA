@@ -1,0 +1,17 @@
+import { StrictMode } from "react";
+import { createRoot } from "react-dom/client";
+import { BrowserRouter } from "react-router-dom";
+import App from "./App.jsx";
+import "./styles/tokens.css";
+
+createRoot(document.getElementById("root")).render(
+  <StrictMode>
+    {/* Los future flags adoptan desde ya el comportamiento de React Router v7:
+        evita los avisos en consola y que la migración sea un salto. */}
+    <BrowserRouter
+      future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
+    >
+      <App />
+    </BrowserRouter>
+  </StrictMode>
+);

@@ -1,0 +1,59 @@
+/* Contenido de About, tal como lo publica el sitio original. */
+
+export const founders = [
+  { name: "Viacheslav Olianishyn", role: "Design Director",
+    img: "https://cms.obys.agency/uploads/Viacheslav_Olianishyn_4a08c4c093.webp",
+    alt: "Monochromatic image of a man lying down, hand shielding his eyes from light." },
+  { name: "Olha Olianishyna", role: "Managing Director",
+    img: "https://cms.obys.agency/uploads/Olha_Olianishyna_daa86dc654.webp",
+    alt: "Young woman in white shirt and pink pants sits on a chair, holding orange flowers." },
+];
+
+export const gallery = [
+  { src: "https://cms.obys.agency/uploads/about04_ddca695db5.webp", w: 991, h: 1237, alt: "Dior \u2014 Business Trips, Paris, France, 2023", brand: "Dior", category: "Business Trips", subtitle: "Paris, France", year: "2023" },
+  { src: "https://cms.obys.agency/uploads/about18_9538b40aa6.webp", w: 1238, h: 1238, alt: "Awwwards \u2014 Conference, Trophy, Studio of the Year, 2020", brand: "Awwwards", category: "Conference, Trophy", subtitle: "Studio of the Year", year: "2020" },
+  { src: "https://cms.obys.agency/uploads/about14_e49de0e5cf.webp", w: 828, h: 1238, alt: "Awwwards \u2014 Trophy, Studio of the Year, 2023", brand: "Awwwards", category: "Trophy", subtitle: "Studio of the Year", year: "2023" },
+  { src: "https://cms.obys.agency/uploads/about09_5870c457e7.webp", w: 1847, h: 1237, alt: "Obys \u2014 Studio Events, Hoverla (2061m) Hiking, 2022", brand: "Obys", category: "Studio Events", subtitle: "Hoverla (2061m) Hiking", year: "2022" },
+  { src: "https://cms.obys.agency/uploads/about05_85c3fdc484.webp", w: 991, h: 1236, alt: "Obys \u2014 Studio Life, Studio Life, 2021", brand: "Obys", category: "Studio Life", subtitle: "Studio Life", year: "2021" },
+  { src: "https://cms.obys.agency/uploads/about10_51344fd058.webp", w: 826, h: 1235, alt: "Obys \u2014 Office Details, Giselle Poster, 2022", brand: "Obys", category: "Office Details", subtitle: "Giselle Poster", year: "2022" },
+  { src: "https://cms.obys.agency/uploads/about15_jpg_7623d3b135.webp", w: 1235, h: 1235, alt: "Obys \u2014 Business Trips, Zurich, Switzerland, 2025", brand: "Obys", category: "Business Trips", subtitle: "Zurich, Switzerland", year: "2025" },
+  { src: "https://cms.obys.agency/uploads/about13_jpg_97c869ff9e.webp", w: 825, h: 1234, alt: "DES \u2014 Filming, Grids Poster, 2025", brand: "DES", category: "Filming", subtitle: "Grids Poster", year: "2025" },
+  { src: "https://cms.obys.agency/uploads/about02_jpg_1ea87ffbef.webp", w: 989, h: 1234, alt: "Awwwards \u2014 Conferences, Valencia, Spain, 2024", brand: "Awwwards", category: "Conferences", subtitle: "Valencia, Spain", year: "2024" },
+  { src: "https://cms.obys.agency/uploads/Mask_group_jpg_9323c97baf.webp", w: 1235, h: 1235, alt: "Eminente \u2014 Fashion, Photography, Creative Direction, Web Design-Dev, 2022", brand: "Eminente", category: "Fashion, Photography", subtitle: "Creative Direction, Web Design-Dev", year: "2022" },
+  { src: "https://cms.obys.agency/uploads/about17_jpg_0ea6b9e131.webp", w: 1235, h: 1235, alt: "Obys \u2014 Photography, Olha Olianishyna, 2023", brand: "Obys", category: "Photography", subtitle: "Olha Olianishyna", year: "2023" },
+  { src: "https://cms.obys.agency/uploads/about11_jpg_7e9e23adce.webp", w: 826, h: 1235, alt: "DES \u2014 Educational Content Filming, Viacheslav + Wasilly, 2025", brand: "DES", category: "Educational Content Filming", subtitle: "Viacheslav + Wasilly", year: "2025" },
+  { src: "https://cms.obys.agency/uploads/about16_jpg_b10b9c7577.webp", w: 1235, h: 1235, alt: "Obys \u2014 Fashion, Photography, Flower on the Chair, 2025", brand: "Obys", category: "Fashion, Photography", subtitle: "Flower on the Chair", year: "2025" },
+  { src: "https://cms.obys.agency/uploads/about12_jpg_585cdcf741.webp", w: 825, h: 1234, alt: "Obys \u2014 Studio Life, Berlin, Germany, 2024", brand: "Obys", category: "Studio Life", subtitle: "Berlin, Germany", year: "2024" },
+  { src: "https://cms.obys.agency/uploads/about01_jpg_2d8991d2aa.webp", w: 989, h: 1234, alt: "Obys \u2014 Studio Life, Amsterdam, Netherlands, 2026", brand: "Obys", category: "Studio Life", subtitle: "Amsterdam, Netherlands", year: "2026" },
+  { src: "https://cms.obys.agency/uploads/about06_jpg_d952352db9.webp", w: 1844, h: 1235, alt: "TGG \u2014 Conferences, Osijek, Croatia, 2025", brand: "TGG", category: "Conferences", subtitle: "Osijek, Croatia", year: "2025" },
+  { src: "https://cms.obys.agency/uploads/about03_jpg_08edda4aa5.webp", w: 989, h: 1234, alt: "Obys \u2014 Business Trips, Rome, Italy, 2024", brand: "Obys", category: "Business Trips", subtitle: "Rome, Italy", year: "2024" },
+  { src: "https://cms.obys.agency/uploads/about08_jpg_e42e74df26.webp", w: 1845, h: 1235, alt: "Peter Lindbergh \u2014 Fashion, Photography, Creative Direction, Web Design-Dev, 2019", brand: "Peter Lindbergh", category: "Fashion, Photography", subtitle: "Creative Direction, Web Design-Dev", year: "2019" },
+  { src: "https://cms.obys.agency/uploads/03_38_23_22_09_jpg_9c7bbc384f.webp", w: 825, h: 1234, alt: "Obys \u2014 Business Trips, Museum of Modern Art, 2024", brand: "Obys", category: "Business Trips", subtitle: "Museum of Modern Art", year: "2024" },
+  { src: "https://cms.obys.agency/uploads/about07_jpg_02f1ec54aa.webp", w: 1843, h: 1234, alt: "Obys \u2014 Photography, Team Photo, 2019", brand: "Obys", category: "Photography", subtitle: "Team Photo", year: "2019" },
+  { src: "https://cms.obys.agency/uploads/about06_1_jpg_8dcb53359b.webp", w: 1843, h: 1235, alt: "Group portrait of five young adults holding books and documents", brand: "", category: "", subtitle: "", year: "" }
+];
+
+export const facts = [
+  { label: "Services", items: ["Creative Direction", "Web Design", "Web Development", "Brand Identity", "3D", "Motion Design", "Lectures and Consulting"] },
+  { label: "Industries", items: ["Architecture", "Fashion", "Technology", "Culture", "Education", "Finance", "Automotive", "Furniture"] },
+  { label: "Selected Awards", items: ["Studio of the Year (Awwwards)", "4x Studio of the Year (CSSDA)", "Best of the Best (Red Dot)", "Jury Prize (European Design Awards)", "30+ Site of the Day (Awwwards)", "35+ Website of the Day (CSSDA)", "3x Award of Excellence (Communication Arts)", "Best of the Behance (Behance)", "and 60+ more..."] },
+  { label: "Latest Public Speeches", items: ["The Geek Gathering, Osijek, Croatia (2025)", "Awwwards, Valencia, Spain (2024)", "Dysarium, Lviv, Ukraine (2024)", "Awwwards, Amsterdam, Netherlands (2022)"] },
+  { label: "Featured Press", items: ["Codrops", "Red Dot", "Awwwards", "FWA", "Communication Arts", "Top Interactive Agencies", "50Pros"] },
+  { label: "Socials", items: ["Instagram", "Behance", "Twitter", "LinkedIn"] }
+];
+
+export const lead = [
+  "Obys is a concept-driven design studio founded by Olha Olianishyna and Viacheslav Olianishyn in 2018 and based in the EU (AMS, WAW, BER).",
+  "Rooted in modernist design principles and graphic design tradition, our work combines typography, grid systems and motion to create digital experiences that balance clarity, usability and bold visual expression.",
+  "Our team remains intentionally small, under 10 people, which allows creative direction to stay personal and decisions to stay sharp. Every project is led closely by the founders. No layers. No dilution."
+];
+
+export const more = [
+  "Over the years, our work has grown from independent collaborations to partnerships with brands such as CNN, Porsche, Hilton, Miro, Makhno and Glyphic Biotechnologies.",
+  "Along the way, Obys was named Studio of the Year by Awwwards in 2023, received 4x Studio of the Year titles from CSS Design Awards, and earned Red Dot recognition \u2014 not as an objective, but as a reflection of consistent standards.",
+  "We live design daily, not only through client work, but through research, experimentation, public talks and education. The studio's methodology has evolved into its own educational platform, where we share the thinking behind our practice.",
+  "Obys takes on a limited number of projects each year, partnering with marketing leaders and founders who value authorship, clarity and long-term brand impact."
+];
+
+export const typographyCredit =
+  "Typography: General Sans (Fontshare) — used here in place of the studio's proprietary OTF Obys NG.";
