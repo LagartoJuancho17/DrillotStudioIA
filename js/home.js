@@ -32,6 +32,11 @@
   const LERP = 0.085;
   const WHEEL_SPEED = 1.0;
   const TOUCH_SPEED = 1.6;
+  /* Cuánto silencio de input hace falta para considerar que el gesto terminó
+     y encajar en el proyecto más cercano. Bajo, para que no se sienta lento;
+     alto como para no pelearse con el trackpad, que emite ráfagas de eventos
+     con huecos de decenas de ms. */
+  const SNAP_DELAY = 140;
 
   const homeEl = document.querySelector("[data-home]");
   const stripEl = document.querySelector("[data-filmstrip]");
@@ -56,6 +61,7 @@
   let horizontal = false;
   let enabled = true;
   let rafId = null;
+  let settleTimer = null;
 
   const mod = (n, m) => ((n % m) + m) % m;
   const rem = () => parseFloat(getComputedStyle(document.documentElement).fontSize);
@@ -185,7 +191,53 @@
     return mod(n - 1 + (q - last) / (first - last), n);
   }
 
+  /* Distancia con signo desde `pos` hasta el centro de proyecto más cercano.
+     Se evalúa cada centro también desplazado ±setH porque el carrusel es
+     circular: estando cerca del final de una copia, el más cercano puede ser
+     el primero de la siguiente. */
+  function nearestDelta(pos) {
+    if (!centers.length || !setH) return 0;
+    const q = mod(pos, setH);
+    let best = 0;
+    let bestAbs = Infinity;
+    for (let i = 0; i < centers.length; i++) {
+      for (let k = -1; k <= 1; k++) {
+        const d = centers[i] + k * setH - q;
+        const abs = Math.abs(d);
+        if (abs < bestAbs) {
+          bestAbs = abs;
+          best = d;
+        }
+      }
+    }
+    return best;
+  }
+
+  /* Encaja en el proyecto más cercano al punto donde el scroll iba a frenar.
+     Se calcula sobre `target` y no sobre `current`: `current` todavía viene
+     interpolando hacia `target`, así que medir ahí haría que el snap eligiera
+     un proyecto que ya quedó atrás y el movimiento se sintiera como un tirón
+     hacia atrás en vez de un asentamiento. */
+  function snapToNearest() {
+    if (!enabled) return;
+    target += nearestDelta(target);
+  }
+
+  function scheduleSnap() {
+    if (settleTimer) clearTimeout(settleTimer);
+    settleTimer = setTimeout(snapToNearest, SNAP_DELAY);
+  }
+
+  function cancelSnap() {
+    if (settleTimer) {
+      clearTimeout(settleTimer);
+      settleTimer = null;
+    }
+  }
+
   function goTo(i) {
+    // Ya aterriza exacto sobre un centro: un snap pendiente sobraría.
+    cancelSnap();
     const n = projects.length;
     const from = fractionalIndex(current);
     // camino más corto en un anillo de n posiciones
@@ -249,11 +301,15 @@
     if (!enabled) return;
     e.preventDefault();
     target += e.deltaY * WHEEL_SPEED;
+    scheduleSnap();
   }
 
   let touchLast = null;
   function onTouchStart(e) {
     if (!enabled) return;
+    // Mientras el dedo está apoyado no se encaja: el snap es para cuando
+    // el gesto termina, no para interrumpirlo a mitad de arrastre.
+    cancelSnap();
     touchLast = horizontal ? e.touches[0].clientX : e.touches[0].clientY;
   }
   function onTouchMove(e) {
@@ -264,7 +320,9 @@
     touchLast = now;
   }
   function onTouchEnd() {
+    if (touchLast === null) return;
     touchLast = null;
+    scheduleSnap();
   }
 
   function onKey(e) {
@@ -287,6 +345,9 @@
 
     horizontal = view === "horizontal";
     enabled = view !== "grid";
+    // Cambian los ejes y las medidas: un snap encolado apuntaría a una
+    // posición del layout anterior.
+    cancelSnap();
 
     // La vista Grid vuelve al scroll nativo del documento.
     document.documentElement.style.overflow = enabled ? "hidden" : "";

@@ -30,6 +30,8 @@ Para volver a verla sin limpiar `sessionStorage`: `http://localhost:4123/?intro=
 El bucle es infinito: se renderizan **tres copias** de los 19 proyectos y se navega sobre la del medio, así siempre hay contenido real arriba y abajo del centro y al envolver la posición el salto es invisible. Las imágenes alternan los cinco formatos del sitio original (`aspect-ratio` y ancho en ciclo), no una grilla uniforme.
 
 Se puede navegar con rueda, gesto táctil, flechas del teclado o haciendo click en un nombre de la lista (va por el camino más corto del anillo).
+
+**Snap.** Cuando el input se aquieta (140ms sin eventos, o al levantar el dedo) el carrusel encaja en el proyecto más cercano, así nunca queda a mitad de camino entre dos. El cálculo se hace sobre el destino del scroll y no sobre la posición actual: como la posición viene interpolando, medir ahí elegiría un proyecto ya superado y se sentiría como un tirón hacia atrás. Al ser circular, evalúa cada centro también desplazado ±una vuelta, de modo que cerca del final el más cercano puede ser el primero de la copia siguiente.
 - **`about.html`** — founders, copy real del sitio, galería editorial de 21 fotos del estudio, columnas de datos (servicios, industrias, premios, charlas, prensa).
 - **`work.html`** — grid con los 19 proyectos reales listados en el sitio.
 - **`work/project.html?slug=<slug>`** — plantilla única reutilizada para las 19 páginas de proyecto (hero, imagen, navegación prev/next con wraparound).
