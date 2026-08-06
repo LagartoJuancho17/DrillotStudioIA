@@ -24,27 +24,6 @@
     });
   }
 
-  function startClock() {
-    const els = qsa("[data-clock]");
-    if (!els.length) return;
-    const STUDIO_TZ = "Europe/Amsterdam";
-    function tick() {
-      const now = new Date();
-      const parts = new Intl.DateTimeFormat("en-GB", {
-        timeZone: STUDIO_TZ,
-        timeZoneName: "short",
-        hour: "numeric",
-        minute: "2-digit",
-        hour12: true,
-      }).formatToParts(now);
-      const get = (type) => parts.find((p) => p.type === type)?.value || "";
-      const label = `${get("timeZoneName")} ${get("hour")}:${get("minute")} ${get("dayPeriod").toUpperCase()}`;
-      els.forEach((el) => (el.textContent = label));
-    }
-    tick();
-    setInterval(tick, 15000);
-  }
-
   function initContactModal() {
     const modal = qs("[data-contact-modal]");
     if (!modal) return;
@@ -219,7 +198,6 @@
     await Promise.all(jobs);
 
     paintMarks();
-    startClock();
     initContactModal();
     initMobileMenu();
     markActiveNav();

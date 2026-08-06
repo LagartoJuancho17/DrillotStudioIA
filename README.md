@@ -7,11 +7,12 @@ Recreación personal, con fines de estudio, del sitio [obys.agency](https://obys
 Necesita servirse por HTTP (usa `fetch()` para los partials de header/footer/preloader — no funciona abriendo los `.html` directo con `file://`).
 
 ```bash
-cd /Users/tobiasarraiza/obys-agency-clone
-python3 -m http.server 4123
+cd /Users/tobiasarraiza/obys-agency-clone && python3 serve.py
 ```
 
 Luego abrir `http://localhost:4123`.
+
+Se usa `serve.py` en vez de `python3 -m http.server` porque este último no manda cabeceras de caché: el navegador aplica su heurística, se queda con copias viejas de css/js/partials y editás un archivo, recargás y seguís viendo lo anterior. `serve.py` fuerza `no-store` en todo, así cada recarga trae lo que está en disco.
 
 ## Qué incluye
 
@@ -35,6 +36,7 @@ Se puede navegar con rueda, gesto táctil, flechas del teclado o haciendo click 
 - **`about.html`** — founders, copy real del sitio, galería editorial de 21 fotos del estudio, columnas de datos (servicios, industrias, premios, charlas, prensa).
 - **`work.html`** — grid con los 19 proyectos reales listados en el sitio.
 - **`work/project.html?slug=<slug>`** — plantilla única reutilizada para las 19 páginas de proyecto (hero, imagen, navegación prev/next con wraparound).
+- **`lab.html`** — **agregado propio, no existe en obys.agency.** Galería masonry con las mismas imágenes reales del sitio pero a color pleno, como contrapunto al blanco y negro del resto. El resto de las páginas recrea el original; esta no.
 
 ## Decisiones y desvíos honestos respecto al sitio real
 
@@ -43,6 +45,8 @@ Se puede navegar con rueda, gesto táctil, flechas del teclado o haciendo click 
 - **Marca "( )"** y wordmark "OBYS®": se recrearon con los mismos paths SVG que usa el sitio real (geometría pura, sin tipografía embebida).
 - **Páginas de proyecto**: no investigué el diseño real de las 19 case studies individuales (fuera de alcance). La plantilla usa los datos reales (categoría, servicios, número, imagen de portada) y linkea honestamente a la case study real en obys.agency en vez de inventar contenido de cliente falso.
 - **Vista "Horizontal"** del toggle: usa el mismo motor de scroll interceptado sobre el eje X. Es interpretación propia — no capturé el comportamiento exacto del sitio real en ese estado.
+- **Reloj del header**: el sitio real muestra la hora del estudio (CEST) en el header. Acá se quitó a pedido.
+- **`lab.html`**: página inventada, no forma parte del sitio original. Usa las imágenes reales del CDN pero la página en sí es diseño propio; las fichas sólo repiten datos que ya estaban en el sitio (nombre de proyecto, categoría, lugar, año), no se inventó trabajo de cliente.
 - **Constantes de scroll** (velocidad de rueda, factor de interpolación): ajustadas a ojo para que se sienta parecido. La *mecánica* (intercepción, bucle de 3 copias, activo centrado, formatos en ciclo) sí está medida del sitio real; estos números concretos no.
 - **Escala tipográfica fluida**: replica la técnica real (`html { font-size: 0.6944vw }`, 1rem = 10px sobre un lienzo de diseño de 1440px), medida directamente del sitio original.
 

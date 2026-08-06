@@ -1,0 +1,207 @@
+/* ==========================================================================
+   Lab — galería a color.
+
+   Contrapunto al resto del sitio: acá las imágenes nunca se desaturan. El
+   hover no agrega color (ya lo tienen), hace lo contrario: apaga TODA la
+   grilla menos la pieza apuntada, que se levanta, satura y saca su ficha.
+   El efecto vive en el contenedor, no en el item, porque necesita afectar
+   a los hermanos.
+   ========================================================================== */
+
+.lab {
+  position: relative;
+  background: var(--white);
+  color: var(--black);
+}
+
+/* ---------- Intro ---------- */
+.lab__intro {
+  padding: calc(var(--header-h) + 8rem) var(--edge) 0;
+}
+
+.lab__eyebrow {
+  font-size: 1.1rem;
+  opacity: 0.45;
+  margin-bottom: 1.4rem;
+}
+
+.lab__lead {
+  max-width: 62rem;
+  font-size: 1.8rem;
+  line-height: 1.5;
+  letter-spacing: -0.01em;
+  margin-bottom: 6rem;
+}
+
+/* ---------- Grilla ---------- */
+.lab__gallery {
+  columns: 4;
+  column-gap: 2rem;
+  padding: 0 var(--edge) 12rem;
+}
+
+.lab__item {
+  position: relative;
+  display: block;
+  break-inside: avoid;
+  margin-bottom: 2rem;
+  color: inherit;
+  /* El z-index sube en hover para que la pieza levantada pase por encima de
+     sus vecinas en lugar de quedar cortada por la siguiente columna. */
+  z-index: 0;
+  transition: transform 0.55s var(--ease-obys), opacity 0.45s var(--ease-out-quad),
+    filter 0.45s var(--ease-out-quad);
+}
+
+.lab__media {
+  position: relative;
+  overflow: hidden;
+  background: var(--grey-03);
+  /* La sombra arranca en cero y sólo aparece en el item activo. */
+  box-shadow: 0 0 0 rgba(0, 0, 0, 0);
+  transition: box-shadow 0.55s var(--ease-obys);
+}
+
+.lab__item img {
+  width: 100%;
+  height: auto;
+  display: block;
+  /* A color siempre. Esta es la diferencia con la galería de About. */
+  transform: scale(1.02);
+  transition: transform 0.7s var(--ease-obys), filter 0.5s var(--ease-out-quad);
+}
+
+/* ---------- El hover: aislar la pieza apuntada ---------- */
+
+/* Todo lo NO apuntado se apaga y pierde color. */
+.lab__gallery:hover .lab__item:not(:hover) {
+  opacity: 0.28;
+  filter: saturate(0.15);
+  transform: scale(0.985);
+}
+
+/* La pieza apuntada se levanta, satura y toma el frente. */
+.lab__gallery .lab__item:hover,
+.lab__item.is-open {
+  z-index: 2;
+  transform: translateY(-0.8rem);
+}
+
+.lab__item:hover .lab__media,
+.lab__item.is-open .lab__media {
+  box-shadow: 0 2.4rem 5rem rgba(0, 0, 0, 0.28);
+}
+
+.lab__item:hover img,
+.lab__item.is-open img {
+  transform: scale(1.09);
+  filter: saturate(1.35) contrast(1.06);
+}
+
+.lab__item:focus-visible {
+  outline: 2px solid var(--black);
+  outline-offset: 4px;
+}
+
+/* ---------- Ficha ---------- */
+.lab__caption {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  padding: 5rem 1.6rem 1.6rem;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.82), rgba(0, 0, 0, 0));
+  color: var(--white);
+  font-size: 1.1rem;
+  line-height: 1.4;
+  opacity: 0;
+  transform: translateY(1rem);
+  transition: opacity 0.4s var(--ease-out-quad), transform 0.5s var(--ease-obys);
+  pointer-events: none;
+}
+
+.lab__item:hover .lab__caption,
+.lab__item.is-open .lab__caption {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.lab__caption-title { font-weight: 500; }
+.lab__caption-meta { opacity: 0.75; }
+
+/* El año/número queda fuera de la imagen, alineado al borde superior. */
+.lab__year {
+  position: absolute;
+  top: -0.2rem;
+  right: 0;
+  font-size: 1.1rem;
+  opacity: 0;
+  transform: translateY(-0.6rem);
+  font-variant-numeric: tabular-nums;
+  transition: opacity 0.4s var(--ease-out-quad), transform 0.4s var(--ease-obys);
+  pointer-events: none;
+}
+
+.lab__item:hover .lab__year,
+.lab__item.is-open .lab__year {
+  opacity: 0.55;
+  transform: translateY(-1.4rem);
+}
+
+/* ---------- Aparición escalonada ---------- */
+/* Sólo se oculta si lab.js confirmó soporte de IntersectionObserver: sin JS
+   la galería se ve completa, nunca en opacity 0. */
+.lab-reveal .lab__item {
+  opacity: 0;
+  transform: translateY(2.4rem);
+}
+.lab-reveal .lab__item.is-in {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.7s var(--ease-out-quad) calc(var(--i, 0) * 45ms),
+    transform 0.7s var(--ease-obys) calc(var(--i, 0) * 45ms);
+}
+/* Ya revelada, el hover recupera el mando sobre opacity/transform. */
+.lab-reveal .lab__gallery:hover .lab__item.is-in:not(:hover) {
+  opacity: 0.28;
+  transform: scale(0.985);
+}
+.lab-reveal .lab__gallery .lab__item.is-in:hover {
+  transform: translateY(-0.8rem);
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 1200px) {
+  .lab__gallery { columns: 3; }
+}
+
+@media (max-width: 900px) {
+  .lab__intro { padding: calc(var(--header-h) + 3rem) var(--edge) 0; }
+  .lab__lead { font-size: 1.6rem; margin-bottom: 3.2rem; }
+  .lab__gallery { columns: 2; column-gap: 1.2rem; padding: 0 var(--edge) 8rem; }
+  .lab__item { margin-bottom: 1.2rem; }
+  .lab__caption { padding: 3.2rem 1.2rem 1.2rem; }
+
+  /* En touch el "apagar hermanos" es molesto: se aplica sólo al item abierto. */
+  .lab__gallery:hover .lab__item:not(:hover) {
+    opacity: 1;
+    filter: none;
+    transform: none;
+  }
+}
+
+@media (max-width: 520px) {
+  .lab__gallery { columns: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lab__item,
+  .lab__item img,
+  .lab__caption,
+  .lab__year,
+  .lab__media { transition-duration: 0.01ms !important; }
+  .lab-reveal .lab__item { opacity: 1; transform: none; }
+}
