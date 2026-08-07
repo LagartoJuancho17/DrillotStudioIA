@@ -112,6 +112,26 @@ export default function Home() {
   // En vista grid se libera para volver al scroll nativo.
   useLockBodyScroll(carouselOn);
 
+  // Reproducción de sonido al cambiar de elemento en el carrusel
+  const tapAudioRef = useRef(null);
+  const isFirstRender = useRef(true);
+
+  useEffect(() => {
+    const audio = new Audio("/assets/tap.mp3");
+    audio.volume = 0.4;
+    tapAudioRef.current = audio;
+  }, []);
+
+  useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
+    if (!carouselOn || !tapAudioRef.current) return;
+    tapAudioRef.current.currentTime = 0;
+    tapAudioRef.current.play().catch(() => {});
+  }, [activeIndex, carouselOn]);
+
   /* Tres copias de la lista: se navega la del medio, así siempre hay contenido
      real arriba y abajo del centro y el envolvimiento es invisible. */
   const loop = useMemo(

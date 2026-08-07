@@ -158,6 +158,36 @@
         }
       ],
       "format": "Horizontal"
+    },
+    {
+      "slug": "rateMyOutfit",
+      "name": "Rate My Outfit",
+      "category": "",
+      "year": "",
+      "favorite": true,
+      "cover": {
+        "src": "/img/lab/rateMyOutfit/portada.webp",
+        "w": 1920,
+        "h": 1076
+      },
+      "images": [
+        {
+          "src": "/img/lab/rateMyOutfit/img1.webp",
+          "w": 1920,
+          "h": 1076
+        },
+        {
+          "src": "/img/lab/rateMyOutfit/img2.webp",
+          "w": 1920,
+          "h": 1076
+        },
+        {
+          "src": "/img/lab/rateMyOutfit/img3.webp",
+          "w": 1920,
+          "h": 1076
+        }
+      ],
+      "format": "Square"
     }
   ],
   "projects": [
