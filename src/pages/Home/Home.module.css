@@ -296,6 +296,12 @@
   );
 }
 
+@media (max-width: 1200px) {
+  .about {
+    display: none !important;
+  }
+}
+
 /* ---------- Responsive ---------- */
 @media (max-width: 900px) {
   .list {
