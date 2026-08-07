@@ -2,7 +2,7 @@
 
 export const founders = [
   { name: "Tobias Arraiza", role: "Founder & Creative Director",
-    img: "https://cms.obys.agency/uploads/Viacheslav_Olianishyn_4a08c4c093.webp",
+    img: "/img/about/mePhoto.webp",
     alt: "Tobias Arraiza — Founder & Creative Director" },
 ];
 
