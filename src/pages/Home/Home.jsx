@@ -127,6 +127,18 @@ export default function Home() {
   const horizontal = view === "horizontal";
   const carouselOn = view !== "grid";
 
+  // En mobile, forzar la vista principal por defecto ("vertical")
+  useEffect(() => {
+    const lockMobileView = () => {
+      if (window.innerWidth <= 900) {
+        setView("vertical");
+      }
+    };
+    lockMobileView();
+    window.addEventListener("resize", lockMobileView);
+    return () => window.removeEventListener("resize", lockMobileView);
+  }, []);
+
   const { stripRef, listRef, activeIndex, goTo } = useCarousel({
     count: homeItems.length,
     horizontal,

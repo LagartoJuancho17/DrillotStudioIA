@@ -21,10 +21,10 @@ import { useCallback, useEffect, useRef, useState } from "react";
 
 const SETS = 3;
 const MID = 1;
-const LERP = 0.085;
-const WHEEL_SPEED = 1.0;
-const TOUCH_SPEED = 1.6;
-const SNAP_DELAY = 140;
+const LERP = 0.12;
+const WHEEL_SPEED = 0.85;
+const TOUCH_SPEED = 1.2;
+const SNAP_DELAY = 200;
 
 const mod = (n, m) => ((n % m) + m) % m;
 
@@ -40,6 +40,8 @@ export function useCarousel({ count, horizontal = false, enabled = true }) {
   const rafId = useRef(null);
   const settleTimer = useRef(null);
   const touchLast = useRef(null);
+  const touchLastTime = useRef(null);
+  const touchVelocity = useRef(0);
   const activeRef = useRef(0);
 
   const [activeIndex, setActiveIndex] = useState(0);
@@ -225,7 +227,11 @@ export function useCarousel({ count, horizontal = false, enabled = true }) {
 
     const onWheel = (e) => {
       e.preventDefault();
-      target.current += e.deltaY * WHEEL_SPEED;
+      let delta = e.deltaY;
+      if (e.deltaMode === 1) delta *= 32;
+      else if (e.deltaMode === 2) delta *= 800;
+
+      target.current += delta * WHEEL_SPEED;
       scheduleSnap();
       start();
     };
@@ -235,21 +241,32 @@ export function useCarousel({ count, horizontal = false, enabled = true }) {
     const onTouchStart = (e) => {
       cancelSnap();
       touchLast.current = axis(e.touches[0]);
+      touchLastTime.current = performance.now();
+      touchVelocity.current = 0;
     };
 
     const onTouchMove = (e) => {
       if (touchLast.current == null) return;
-      e.preventDefault();
       const now = axis(e.touches[0]);
-      target.current += (touchLast.current - now) * TOUCH_SPEED;
+      const nowTime = performance.now();
+      const dt = Math.max(16, nowTime - (touchLastTime.current || nowTime));
+      const dist = touchLast.current - now;
+
+      target.current += dist * TOUCH_SPEED;
+      touchVelocity.current = dist / dt;
       touchLast.current = now;
+      touchLastTime.current = nowTime;
       start();
     };
 
     const onTouchEnd = () => {
       if (touchLast.current == null) return;
       touchLast.current = null;
+      if (Math.abs(touchVelocity.current) > 0.08) {
+        target.current += touchVelocity.current * 180;
+      }
       scheduleSnap();
+      start();
     };
 
     const onKey = (e) => {

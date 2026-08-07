@@ -340,22 +340,9 @@
     grid-row: 1;
   }
 
-  /* Selector de vista (Vertical, Horizontal, Grid) DEBAJO de Drillot Studio */
+  /* En mobile no se puede cambiar la vista: ocultar selector */
   .bottom {
-    position: fixed;
-    top: 5.4rem;
-    left: var(--edge);
-    right: auto;
-    transform: none;
-    bottom: auto;
-    z-index: 125;
-    background: rgba(255, 255, 255, 0.88);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    padding: 0.4rem 0.6rem;
-    border-radius: 100px;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
-    border: 1px solid rgba(0, 0, 0, 0.06);
+    display: none !important;
   }
 
   .toggle {
