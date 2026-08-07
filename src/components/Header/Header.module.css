@@ -81,19 +81,25 @@
 
 .burger {
   display: none;
-  width: 2.6rem;
-  height: 2rem;
+  width: 2.8rem;
+  height: 1.6rem;
   flex-direction: column;
   justify-content: space-between;
   pointer-events: auto;
   position: relative;
-  z-index: 130;
+  z-index: 140;
+  background: transparent;
+  border: none;
+  padding: 0;
+  cursor: pointer;
 }
 .burger span {
   display: block;
-  height: 1px;
+  height: 2px;
+  width: 100%;
   background: currentColor;
-  transition: transform 0.35s var(--ease-obys);
+  border-radius: 1px;
+  transition: transform 0.35s var(--ease-obys), opacity 0.35s var(--ease-obys);
 }
 
 @media (max-width: 900px) {
@@ -152,9 +158,9 @@
   }
 
   .rootOpen .burger span:first-child {
-    transform: translateY(0.45rem) rotate(45deg);
+    transform: translateY(0.7rem) rotate(45deg);
   }
   .rootOpen .burger span:last-child {
-    transform: translateY(-0.45rem) rotate(-45deg);
+    transform: translateY(-0.7rem) rotate(-45deg);
   }
 }

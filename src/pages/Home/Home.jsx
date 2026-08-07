@@ -31,6 +31,31 @@ const resolveFormat = (item, index) => {
 const SETS = 3;
 const VIEWS = ["vertical", "horizontal", "grid"];
 
+const VIEW_ICONS = {
+  vertical: (
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round">
+      <line x1="3" y1="1" x2="3" y2="13" />
+      <line x1="7" y1="1" x2="7" y2="13" />
+      <line x1="11" y1="1" x2="11" y2="13" />
+    </svg>
+  ),
+  horizontal: (
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round">
+      <line x1="1" y1="3" x2="13" y2="3" />
+      <line x1="1" y1="7" x2="13" y2="7" />
+      <line x1="1" y1="11" x2="13" y2="11" />
+    </svg>
+  ),
+  grid: (
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round">
+      <rect x="1.5" y="1.5" width="4.5" height="4.5" />
+      <rect x="8" y="1.5" width="4.5" height="4.5" />
+      <rect x="1.5" y="8" width="4.5" height="4.5" />
+      <rect x="8" y="8" width="4.5" height="4.5" />
+    </svg>
+  ),
+};
+
 /* Una diapositiva. Memoizada: al cambiar el activo React volvería a renderizar
    las tres copias enteras aunque sólo dos piezas cambian de estado. Así se
    re-renderiza únicamente la que entra y la que sale.
@@ -214,17 +239,23 @@ export default function Home() {
       <div className={styles.bottom}>
         <div className={styles.toggle} role="tablist" aria-label="Work view">
           {VIEWS.map((name, i) => (
-            <span key={name}>
+            <span key={name} className={styles.toggleGroup}>
               <button
                 type="button"
                 role="tab"
                 aria-selected={view === name}
-                className={view === name ? styles.toggleOn : undefined}
+                className={`${styles.toggleBtn} ${
+                  view === name ? styles.toggleOn : ""
+                }`}
                 onClick={() => setView(name)}
+                title={name[0].toUpperCase() + name.slice(1)}
               >
-                {name[0].toUpperCase() + name.slice(1)}
+                <span className={styles.toggleIcon}>{VIEW_ICONS[name]}</span>
+                <span className={styles.toggleText}>
+                  {name[0].toUpperCase() + name.slice(1)}
+                </span>
               </button>
-              {i < VIEWS.length - 1 && <span>,</span>}
+              {i < VIEWS.length - 1 && <span className={styles.toggleSep}>,</span>}
             </span>
           ))}
         </div>

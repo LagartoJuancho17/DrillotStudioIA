@@ -24,7 +24,6 @@
 
 @media (max-width: 900px) {
   .root {
-    margin-right: var(--edge);
-    bottom: 1.6rem;
+    display: none !important;
   }
 }

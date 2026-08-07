@@ -225,25 +225,53 @@
   z-index: 60;
   font-size: 1.1rem;
 }
+
 .toggle {
   display: flex;
-  gap: 0.2rem;
+  align-items: center;
+  gap: 0.4rem;
 }
-.toggle span {
-  opacity: 0.35;
+
+.toggleGroup {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
 }
-.toggle button {
+
+.toggleBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
   opacity: 0.35;
   color: inherit;
+  background: transparent;
+  border: none;
+  padding: 0;
+  cursor: pointer;
   transition: opacity 0.3s var(--ease-out-quad);
 }
-.toggle button:hover {
+
+.toggleBtn:hover {
   opacity: 1;
 }
+
 .toggleOn {
   opacity: 1 !important;
+}
+
+.toggleOn .toggleText {
   text-decoration: underline;
   text-underline-offset: 0.25em;
+}
+
+.toggleIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.toggleSep {
+  opacity: 0.35;
 }
 
 /* ---------- Vista horizontal ---------- */
@@ -274,25 +302,24 @@
   .list {
     display: none;
   }
+  
+  /* Quita la sección about / contact en mobile */
   .about {
-    top: auto;
-    bottom: 9rem;
-    left: var(--edge);
-    right: var(--edge);
-    width: auto;
-    font-size: 1.4rem;
+    display: none !important;
   }
-  .aboutCopy {
-    display: none;
-  }
+
+  /* Ajuste de tamaño del SVG de corchetes para móviles */
   .mark {
-    width: 20rem;
-    height: 20rem;
+    width: 14rem;
+    height: 14rem;
+    max-width: 65vw;
+    max-height: 65vw;
   }
+
   .meta {
     grid-template-columns: 1fr auto;
     top: auto;
-    bottom: 5.6rem;
+    bottom: 3.6rem;
     transform: none;
     row-gap: 0.4rem;
   }
@@ -307,8 +334,50 @@
     grid-column: 2;
     grid-row: 1;
   }
+
+  /* Selector de vista (Vertical, Horizontal, Grid) ARRIBA como gráfico minimalista */
   .bottom {
-    background: var(--white);
-    padding: 1rem 0 0;
+    position: fixed;
+    top: 2.2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: auto;
+    z-index: 125;
+    background: rgba(255, 255, 255, 0.88);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    padding: 0.5rem 0.8rem;
+    border-radius: 100px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    border: 1px solid rgba(0, 0, 0, 0.06);
+  }
+
+  .toggle {
+    gap: 0.6rem;
+  }
+
+  .toggleGroup {
+    gap: 0;
+  }
+
+  .toggleSep {
+    display: none;
+  }
+
+  .toggleText {
+    display: none; /* En mobile se muestra ÚNICAMENTE el gráfico de líneas */
+  }
+
+  .toggleBtn {
+    padding: 0.5rem 0.7rem;
+    border-radius: 100px;
+    opacity: 0.4;
+    transition: opacity 0.3s var(--ease-out-quad), background-color 0.3s var(--ease-out-quad), color 0.3s var(--ease-out-quad);
+  }
+
+  .toggleOn {
+    opacity: 1 !important;
+    background-color: var(--black);
+    color: var(--white);
   }
 }
