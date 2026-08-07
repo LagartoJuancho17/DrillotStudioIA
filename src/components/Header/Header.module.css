@@ -21,13 +21,14 @@
 }
 
 .logo {
-  width: 19rem;
+  font-size: 2.2rem;
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  text-transform: uppercase;
   color: currentColor;
-  display: block;
-}
-.logo svg {
-  width: 100%;
-  height: auto;
+  display: inline-block;
+  white-space: nowrap;
+  line-height: 1;
 }
 
 .nav {
@@ -101,7 +102,7 @@
     align-items: center;
   }
   .logo {
-    width: 12rem;
+    font-size: 1.6rem;
   }
   .burger {
     display: flex;

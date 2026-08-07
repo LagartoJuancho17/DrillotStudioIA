@@ -1,4 +1,4 @@
-import { memo, useCallback, useMemo, useState } from "react";
+import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { BracketMark } from "../../components/Marks.jsx";
 import { useCarousel } from "../../hooks/useCarousel.js";
@@ -6,17 +6,27 @@ import { useLockBodyScroll } from "../../hooks/useLockBodyScroll.js";
 import { homeItems } from "../../data/homeItems.js";
 import { GridView } from "./GridView.jsx";
 import { usePageTitle } from "../../hooks/usePageTitle.js";
+import config from "../../data/config.json";
 import styles from "./Home.module.css";
 
-/* Los cinco formatos que el sitio original alterna en ciclo, medidos del DOM
-   real: no es una grilla uniforme. */
-const FORMATS = [
-  { ar: 1.0, w: 13.2 },
-  { ar: 0.8, w: 17.5 },
-  { ar: 1.0, w: 18.4 },
-  { ar: 0.67, w: 13.2 },
-  { ar: 1.5, w: 19.6 },
-];
+/* Formatos del carrusel: vienen de config.json → carousel.
+   `scale` multiplica todos los anchos: 1.0 = sin cambio, 0.8 = más chico, 1.3 = más grande.
+   Si un proyecto define `"format": "Vertical"`, toma ese formato directamente.
+   Si no lo define, cicla entre los 5 formatos en orden. */
+const { scale, formats } = config.carousel;
+const FORMATS = formats.map((f) => ({ name: f.name, ar: f.ar, w: f.w * scale }));
+const FORMATS_BY_NAME = FORMATS.reduce((acc, f) => {
+  if (f.name) acc[f.name.toLowerCase()] = f;
+  return acc;
+}, {});
+
+const resolveFormat = (item, index) => {
+  if (item.format) {
+    const custom = FORMATS_BY_NAME[String(item.format).toLowerCase()];
+    if (custom) return custom;
+  }
+  return FORMATS[index % FORMATS.length];
+};
 
 const SETS = 3;
 const VIEWS = ["vertical", "horizontal", "grid"];
@@ -26,8 +36,23 @@ const VIEWS = ["vertical", "horizontal", "grid"];
    re-renderiza únicamente la que entra y la que sale.
 
    El destino llega en `item.to`: las piezas de Lab van a /lab/<slug> y las de
-   Obys a /work/<slug>, sin que la diapositiva tenga que saber de dónde salió. */
+   Obys a /work/<slug>, sin que la diapositiva tenga que saber de dónde salió.
+
+   Si el item tiene `video`, se reproduce cuando la diapositiva se activa (active).
+   La imagen siempre está visible (es el fondo / poster). */
 const Slide = memo(function Slide({ item, format, active, ariaHidden }) {
+  const videoRef = useRef(null);
+
+  useEffect(() => {
+    if (!item.video || !videoRef.current) return;
+    if (active) {
+      videoRef.current.play().catch(() => {});
+    } else {
+      videoRef.current.pause();
+      videoRef.current.currentTime = 0;
+    }
+  }, [active, item.video]);
+
   return (
     <Link
       to={item.to}
@@ -38,6 +63,18 @@ const Slide = memo(function Slide({ item, format, active, ariaHidden }) {
       tabIndex={ariaHidden ? -1 : undefined}
     >
       <img src={item.img} alt={ariaHidden ? "" : item.name} loading="lazy" draggable={false} />
+      {item.video && (
+        <video
+          ref={videoRef}
+          src={item.video}
+          muted
+          loop
+          playsInline
+          preload="auto"
+          aria-hidden="true"
+          draggable={false}
+        />
+      )}
     </Link>
   );
 });
@@ -84,7 +121,7 @@ export default function Home() {
           key: `${set}-${item.key}`,
           item,
           index: i,
-          format: FORMATS[i % FORMATS.length],
+          format: resolveFormat(item, i),
           ghost: set !== 1, // las copias laterales son decorativas
         }))
       ).flat(),
@@ -132,13 +169,11 @@ export default function Home() {
 
           <aside className={styles.about}>
             <p className={styles.aboutCopy}>
-              The studio is shaped by people who care deeply about design and the
-              process behind. Each project becomes a case study and a meaningful
-              part of our portfolio, developed with care and attention.
+              {config.site.homeAboutText}
             </p>
             <p className={styles.contactLabel}>Contact:</p>
-            <a href="mailto:info@obys.agency" className={styles.contactEmail}>
-              info@obys.agency
+            <a href={`mailto:${config.site.email}`} className={styles.contactEmail}>
+              {config.site.email}
             </a>
           </aside>
 

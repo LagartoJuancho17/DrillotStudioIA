@@ -1,12 +1,13 @@
 import { memo, useEffect } from "react";
 import { useLockBodyScroll } from "../../hooks/useLockBodyScroll.js";
+import config from "../../data/config.json";
 import styles from "./ContactModal.module.css";
 
+const { email, instagram, whatsapp, founder, name } = config.site;
+
 const SOCIALS = [
-  { href: "https://www.instagram.com/obys.agency/", label: "Instagram" },
-  { href: "https://www.behance.net/obys", label: "Behance" },
-  { href: "https://twitter.com/obys_agency", label: "Twitter" },
-  { href: "https://www.linkedin.com/company/obysagency/", label: "LinkedIn" },
+  { href: instagram, label: `Instagram (@${instagram.split("/").filter(Boolean).pop()})` },
+  { href: whatsapp,  label: `WhatsApp (+54 11 3803252)` },
 ];
 
 function ContactModalBase({ open, onClose }) {
@@ -24,7 +25,6 @@ function ContactModalBase({ open, onClose }) {
   return (
     <div
       className={`${styles.root} ${open ? styles.open : ""}`}
-      // aria-hidden en vez de desmontar: así la transición de salida se ve.
       aria-hidden={!open}
     >
       <div className={styles.scrim} onClick={onClose} />
@@ -36,17 +36,18 @@ function ContactModalBase({ open, onClose }) {
         </button>
 
         <p className={styles.eyebrow}>Let&rsquo;s start something great.</p>
-        <a href="mailto:info@obys.agency" className={styles.email}>
-          info@obys.agency
+        <a href={`mailto:${email}`} className={styles.email}>
+          {email}
         </a>
 
         <div className={styles.grid}>
           <div className={styles.col}>
-            <p className={styles.label}>Studio</p>
-            <p>Amsterdam · Warsaw · Berlin</p>
+            <p className={styles.label}>Studio &amp; Founder</p>
+            <p>{founder}</p>
+            <p>{name}</p>
           </div>
           <div className={styles.col}>
-            <p className={styles.label}>Social</p>
+            <p className={styles.label}>Contacto &amp; Redes</p>
             {SOCIALS.map((s) => (
               <a key={s.label} href={s.href} target="_blank" rel="noopener noreferrer">
                 {s.label}

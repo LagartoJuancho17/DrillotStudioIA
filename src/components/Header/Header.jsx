@@ -23,8 +23,8 @@ function HeaderBase({ onOpenContact }) {
 
   return (
     <header className={`${styles.root} ${menuOpen ? styles.rootOpen : ""}`}>
-      <Link to="/" className={styles.logo} aria-label="Obys — Inicio">
-        <Wordmark />
+      <Link to="/" className={styles.logo} aria-label="Drillot Studio — Inicio">
+        Drillot Studio
       </Link>
 
       <button

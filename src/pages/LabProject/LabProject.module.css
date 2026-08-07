@@ -45,6 +45,13 @@
   padding: 0 var(--edge);
 }
 
+/* Proyectos con imágenes en formato portrait (9:16):
+   las piezas son angostas, caben 3 cómodamente en desktop. */
+.imagesPortrait {
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.2rem;
+}
+
 .figure {
   position: relative;
   display: block;
@@ -158,9 +165,13 @@
 /* En pantallas anchas entra una tercera columna sin que las piezas queden
    chicas. Por debajo se queda en dos, que a 1280px deja cada imagen en unos
    600px: tamaño cómodo para mirar obra. */
-@media (min-width: 1600px) {
+@media (min-width: 1280px) {
   .images {
     grid-template-columns: repeat(3, 1fr);
+  }
+  /* Portrait ya está en 3: en pantallas muy anchas pasa a 4 */
+  .imagesPortrait {
+    grid-template-columns: repeat(4, 1fr);
   }
 }
 
@@ -197,6 +208,10 @@
 @media (max-width: 640px) {
   .images {
     grid-template-columns: 1fr;
+  }
+  .imagesPortrait {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.8rem;
   }
 }
 

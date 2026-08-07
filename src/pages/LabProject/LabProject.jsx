@@ -60,6 +60,13 @@ export default function LabProject() {
   const next = labProjects[(index + 1) % total];
   const hasSiblings = total > 1;
 
+  /* Si todas las piezas son portrait (alto > ancho), se activa la clase que
+     muestra 3 columnas. Si alguna no tiene dimensiones, se asume landscape. */
+  const allPortrait = shots.every((img) => {
+    const { w, h } = normalizeImage(img);
+    return w && h && h > w;
+  });
+
   return (
     <main className={styles.root}>
       <section className={styles.hero}>
@@ -72,7 +79,7 @@ export default function LabProject() {
         <h1 className={styles.title}>{project.name}</h1>
       </section>
 
-      <section className={styles.images}>
+      <section className={`${styles.images} ${allPortrait ? styles.imagesPortrait : ""}`}>
         {shots.map((image, i) => (
           <Shot
             key={normalizeImage(image).src}

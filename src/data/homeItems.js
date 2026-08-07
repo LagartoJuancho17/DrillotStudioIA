@@ -1,5 +1,6 @@
 import { projects } from "./projects.js";
 import { labProjects, normalizeImage } from "./labProjects.js";
+import { coverVideos } from "virtual:lab-media";
 
 /* Los proyectos, ya resueltos para mostrar.
 
@@ -21,7 +22,11 @@ const fromLab = (p) => ({
   // además invita a entrar.
   services: `${(p.images?.length || 0) + 1} images`,
   img: normalizeImage(p.cover).src,
+  // El video viene del módulo virtual generado por el plugin Vite que escanea
+  // la carpeta del proyecto: con soltar portadaVideo.mp4 alcanza.
+  video: coverVideos[p.slug] ?? null,
   favorite: Boolean(p.favorite),
+  format: p.format || null,
 });
 
 const fromWork = (p) => ({
@@ -33,6 +38,7 @@ const fromWork = (p) => ({
   services: p.services,
   img: p.img,
   favorite: Boolean(p.favorite),
+  format: p.format || null,
 });
 
 /* El carrusel de la home: todo, con los de Lab primero por ser obra propia.
