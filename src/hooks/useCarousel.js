@@ -294,7 +294,10 @@ export function useCarousel({ count, horizontal = false, enabled = true }) {
       render();
     };
 
-    settleTo(activeRef.current);
+    // Medición tras el pase de reflow del navegador al cambiar de orientación
+    const rafInit = requestAnimationFrame(() => {
+      settleTo(activeRef.current);
+    });
 
     /* La webfont cambia las métricas de la lista y el resize cambia todo:
        en ambos casos hay que volver a medir conservando el activo. */
@@ -314,6 +317,7 @@ export function useCarousel({ count, horizontal = false, enabled = true }) {
 
     return () => {
       cancelled = true;
+      cancelAnimationFrame(rafInit);
       window.removeEventListener("resize", onResize);
       if (resizeRaf) cancelAnimationFrame(resizeRaf);
     };
