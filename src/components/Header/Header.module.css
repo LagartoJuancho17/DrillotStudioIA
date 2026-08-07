@@ -92,6 +92,7 @@
   border: none;
   padding: 0;
   cursor: pointer;
+  color: white;
 }
 .burger span {
   display: block;

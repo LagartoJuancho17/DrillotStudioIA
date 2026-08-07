@@ -59,8 +59,7 @@ export function useCarousel({ count, horizontal = false, enabled = true }) {
     const next = [];
     let acc = 0;
     kids.forEach((el) => {
-      const rect = el.getBoundingClientRect();
-      const size = horizontal ? rect.width : rect.height;
+      const size = horizontal ? el.offsetWidth : el.offsetHeight;
       next.push(acc + size / 2);
       acc += size + gap;
     });
@@ -70,7 +69,7 @@ export function useCarousel({ count, horizontal = false, enabled = true }) {
 
     const list = listRef.current;
     if (list && list.children.length) {
-      nameSize.current = list.children[0].getBoundingClientRect().height;
+      nameSize.current = list.children[0].offsetHeight;
     }
   }, [count, horizontal]);
 
@@ -288,7 +287,7 @@ export function useCarousel({ count, horizontal = false, enabled = true }) {
     const settleTo = (index) => {
       measure();
       const c = centers.current;
-      if (!c.length) return;
+      if (!c.length || setSize.current <= 0) return;
       current.current = c[index] ?? c[0];
       target.current = current.current;
       render();
