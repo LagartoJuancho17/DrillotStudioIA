@@ -92,7 +92,8 @@ export default function About() {
         ))}
       </section>
 
-      <section className={styles.gallery} aria-label="Studio gallery">
+      {/* Galería de imágenes de About (oculta temporalmente, manteniendo el CSS y la estructura de grilla) */}
+      {/* <section className={styles.gallery} aria-label="Studio gallery">
         {gallery.map((item, i) => (
           <GalleryItem
             key={item.src}
@@ -102,7 +103,7 @@ export default function About() {
             onTouchOpen={handleTouchOpen(i)}
           />
         ))}
-      </section>
+      </section> */}
 
       <section className={styles.more}>
         {more.map((p) => (
