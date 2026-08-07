@@ -29,22 +29,32 @@
   word-wrap: break-word;
 }
 
-/* Las imágenes a ancho completo y en color, apiladas: es una ficha para mirar
-   obra, no para leer. */
+/* Grid y no CSS multi-column: columns balancea la altura de las columnas en
+   vez de llenarlas de izquierda a derecha, así que con pocas piezas deja
+   columnas vacías (4 imágenes en 3 columnas terminaban como 2 + 2 + 0). Grid
+   respeta la cantidad pedida siempre.
+
+   align-items: start deja que cada imagen conserve su alto natural en vez de
+   estirarse al de la fila, así no se recorta ni se deforma cuando el proyecto
+   mezcla proporciones. */
 .images {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  align-items: start;
   gap: 2rem;
   padding: 0 var(--edge);
 }
 
 .figure {
   position: relative;
+  display: block;
   overflow: hidden;
   background: var(--grey-03);
   opacity: 0;
   transform: translateY(2.4rem);
-  transition: opacity 0.7s var(--ease-out-quad), transform 0.7s var(--ease-obys);
+  transition: opacity 0.7s var(--ease-out-quad), transform 0.7s var(--ease-obys),
+    box-shadow 0.5s var(--ease-obys);
+  box-shadow: 0 0 0 rgba(0, 0, 0, 0);
 }
 .figureIn {
   opacity: 1;
@@ -55,6 +65,15 @@
   width: 100%;
   height: auto;
   display: block;
+  transform: scale(1.01);
+  transition: transform 0.7s var(--ease-obys);
+}
+
+.figureIn:hover {
+  box-shadow: 0 2rem 4rem rgba(0, 0, 0, 0.22);
+}
+.figure:hover img {
+  transform: scale(1.05);
 }
 
 .index {
@@ -66,6 +85,11 @@
   mix-blend-mode: difference;
   font-variant-numeric: tabular-nums;
   pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.4s var(--ease-out-quad);
+}
+.figure:hover .index {
+  opacity: 1;
 }
 
 /* ---------- Paginador ---------- */
@@ -131,6 +155,15 @@
   opacity: 1;
 }
 
+/* En pantallas anchas entra una tercera columna sin que las piezas queden
+   chicas. Por debajo se queda en dos, que a 1280px deja cada imagen en unos
+   600px: tamaño cómodo para mirar obra. */
+@media (min-width: 1600px) {
+  .images {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
 @media (max-width: 900px) {
   .hero {
     padding: calc(var(--header-h) + 3rem) var(--edge) 3rem;
@@ -148,12 +181,31 @@
   .images {
     gap: 1.2rem;
   }
+  /* En touch no hay hover, así que el número se muestra siempre. */
+  .index {
+    opacity: 1;
+  }
   .pager {
     margin-top: 5rem;
     padding: 2.4rem var(--edge) 8rem;
   }
   .pagerLink {
     max-width: 48%;
+  }
+}
+
+@media (max-width: 640px) {
+  .images {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .figure img {
+    transition: none;
+  }
+  .figure:hover img {
+    transform: scale(1.01);
   }
 }
 
