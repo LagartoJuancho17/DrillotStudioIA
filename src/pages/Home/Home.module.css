@@ -309,10 +309,10 @@
 
   /* Ajuste de tamaño del SVG de corchetes para móviles */
   .mark {
-    width: 14rem;
-    height: 14rem;
-    max-width: 65vw;
-    max-height: 65vw;
+    width: 18rem;
+    height: 18rem;
+    max-width: 78vw;
+    max-height: 78vw;
   }
 
   .meta {
