@@ -190,6 +190,36 @@
       "format": "Square"
     },
     {
+      "slug": "ChaoticNature",
+      "name": "Chaotic Nature",
+      "category": "",
+      "year": "",
+      "favorite": true,
+      "cover": {
+        "src": "/img/lab/ChaoticNature/portada.webp",
+        "w": 1280,
+        "h": 1920
+      },
+      "images": [
+        {
+          "src": "/img/lab/ChaoticNature/img1.webp",
+          "w": 1280,
+          "h": 1920
+        },
+        {
+          "src": "/img/lab/ChaoticNature/img2.webp",
+          "w": 1280,
+          "h": 1920
+        },
+        {
+          "src": "/img/lab/ChaoticNature/img3.webp",
+          "w": 1280,
+          "h": 1920
+        }
+      ],
+      "format": "Vertical"
+    },
+    {
       "slug": "TokyoCar",
       "name": "Tokyo Car",
       "category": "",
@@ -278,6 +308,41 @@
         }
       ],
       "format": "Horizontal"
+    },
+    {
+      "slug": "RedCarGlass",
+      "name": "Red Car Glass",
+      "category": "",
+      "year": "",
+      "favorite": true,
+      "cover": {
+        "src": "/img/lab/RedCarGlass/portada.webp",
+        "w": 1254,
+        "h": 1254
+      },
+      "images": [
+        {
+          "src": "/img/lab/RedCarGlass/img1.webp",
+          "w": 1254,
+          "h": 1254
+        },
+        {
+          "src": "/img/lab/RedCarGlass/img2.webp",
+          "w": 1254,
+          "h": 1254
+        },
+        {
+          "src": "/img/lab/RedCarGlass/img3.webp",
+          "w": 1254,
+          "h": 1254
+        },
+        {
+          "src": "/img/lab/RedCarGlass/img4.webp",
+          "w": 1122,
+          "h": 1402
+        }
+      ],
+      "format": "Square"
     }
   ],
   "projects": [
