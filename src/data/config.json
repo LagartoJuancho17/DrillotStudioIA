@@ -168,26 +168,66 @@
       "cover": {
         "src": "/img/lab/rateMyOutfit/portada.webp",
         "w": 1920,
-        "h": 1076
+        "h": 1920
       },
       "images": [
         {
           "src": "/img/lab/rateMyOutfit/img1.webp",
           "w": 1920,
-          "h": 1076
+          "h": 1920
         },
         {
           "src": "/img/lab/rateMyOutfit/img2.webp",
           "w": 1920,
-          "h": 1076
+          "h": 1920
         },
         {
           "src": "/img/lab/rateMyOutfit/img3.webp",
           "w": 1920,
-          "h": 1076
+          "h": 1920
         }
       ],
       "format": "Square"
+    },
+    {
+      "slug": "TokyoCar",
+      "name": "Tokyo Car",
+      "category": "",
+      "year": "",
+      "favorite": true,
+      "cover": {
+        "src": "/img/lab/TokyoCar/portada.webp",
+        "w": 1254,
+        "h": 1254
+      },
+      "images": [
+        {
+          "src": "/img/lab/TokyoCar/img1.webp",
+          "w": 1254,
+          "h": 1254
+        },
+        {
+          "src": "/img/lab/TokyoCar/img2.webp",
+          "w": 1254,
+          "h": 1254
+        },
+        {
+          "src": "/img/lab/TokyoCar/img3.webp",
+          "w": 1254,
+          "h": 1254
+        },
+        {
+          "src": "/img/lab/TokyoCar/img4.webp",
+          "w": 1254,
+          "h": 1254
+        },
+        {
+          "src": "/img/lab/TokyoCar/img5.webp",
+          "w": 1254,
+          "h": 1254
+        }
+      ],
+      "format": "MiniSquare"
     }
   ],
   "projects": [
