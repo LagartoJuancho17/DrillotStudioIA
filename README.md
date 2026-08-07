@@ -42,7 +42,11 @@ Dos pasos, sin tocar ningún componente:
 }
 ```
 
-La grilla, la ficha y la navegación anterior/siguiente se arman solas.
+Con eso el proyecto aparece en tres lugares a la vez, sin tocar nada más: **el carrusel de la home**, la grilla de `/lab` y su propia ficha en `/lab/<slug>`. La navegación anterior/siguiente también se arma sola.
+
+En la home los proyectos de Lab van **primero**, delante de los de Obys, porque son obra propia. La numeración del carrusel se recalcula sobre la lista combinada, así que es correlativa (`01` es el primero de Lab). Cada pieza sabe a dónde lleva: las de Lab a `/lab/<slug>` y las de Obys a `/work/<slug>`. La grilla de `/work` sigue mostrando sólo los de Obys, con su numeración original.
+
+Esa unión vive en [`src/data/homeItems.js`](src/data/homeItems.js). Si algún día querés que la home muestre **sólo** lo tuyo, se borra el spread de `projects` de ahí y listo.
 
 Conviene poner `w` y `h`: reservan la caja antes de que cargue la imagen y evitan que la grilla salte. Se sacan con `sips -g pixelWidth -g pixelHeight archivo.jpg`.
 

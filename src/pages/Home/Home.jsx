@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { BracketMark } from "../../components/Marks.jsx";
 import { useCarousel } from "../../hooks/useCarousel.js";
 import { useLockBodyScroll } from "../../hooks/useLockBodyScroll.js";
-import { projects } from "../../data/projects.js";
+import { homeItems } from "../../data/homeItems.js";
 import { GridView } from "./GridView.jsx";
 import styles from "./Home.module.css";
 
@@ -20,25 +20,28 @@ const FORMATS = [
 const SETS = 3;
 const VIEWS = ["vertical", "horizontal", "grid"];
 
-/* Una diapositiva. memo con comparador propio: al cambiar el activo React
-   volvería a renderizar las 57 (19 × 3 copias) aunque sólo dos cambian de
-   estado. Así se re-renderiza únicamente la que entra y la que sale. */
-const Slide = memo(function Slide({ project, format, active, ariaHidden }) {
+/* Una diapositiva. Memoizada: al cambiar el activo React volvería a renderizar
+   las tres copias enteras aunque sólo dos piezas cambian de estado. Así se
+   re-renderiza únicamente la que entra y la que sale.
+
+   El destino llega en `item.to`: las piezas de Lab van a /lab/<slug> y las de
+   Obys a /work/<slug>, sin que la diapositiva tenga que saber de dónde salió. */
+const Slide = memo(function Slide({ item, format, active, ariaHidden }) {
   return (
     <Link
-      to={`/work/${project.slug}`}
+      to={item.to}
       className={`${styles.slide} ${active ? styles.slideActive : ""}`}
       style={{ width: `${format.w}rem`, aspectRatio: String(format.ar) }}
-      aria-label={project.name}
+      aria-label={item.name}
       aria-hidden={ariaHidden || undefined}
       tabIndex={ariaHidden ? -1 : undefined}
     >
-      <img src={project.img} alt={ariaHidden ? "" : project.name} loading="lazy" draggable={false} />
+      <img src={item.img} alt={ariaHidden ? "" : item.name} loading="lazy" draggable={false} />
     </Link>
   );
 });
 
-const NameItem = memo(function NameItem({ project, active, onSelect, ariaHidden }) {
+const NameItem = memo(function NameItem({ item, active, onSelect, ariaHidden }) {
   return (
     <button
       type="button"
@@ -47,7 +50,7 @@ const NameItem = memo(function NameItem({ project, active, onSelect, ariaHidden 
       aria-hidden={ariaHidden || undefined}
       tabIndex={ariaHidden ? -1 : undefined}
     >
-      {project.name}
+      {item.name}
     </button>
   );
 });
@@ -58,7 +61,7 @@ export default function Home() {
   const carouselOn = view !== "grid";
 
   const { stripRef, listRef, activeIndex, goTo } = useCarousel({
-    count: projects.length,
+    count: homeItems.length,
     horizontal,
     enabled: carouselOn,
   });
@@ -72,9 +75,9 @@ export default function Home() {
   const loop = useMemo(
     () =>
       Array.from({ length: SETS }, (_, set) =>
-        projects.map((project, i) => ({
-          key: `${set}-${project.slug}`,
-          project,
+        homeItems.map((item, i) => ({
+          key: `${set}-${item.key}`,
+          item,
           index: i,
           format: FORMATS[i % FORMATS.length],
           ghost: set !== 1, // las copias laterales son decorativas
@@ -83,7 +86,7 @@ export default function Home() {
     []
   );
 
-  const active = projects[activeIndex] ?? projects[0];
+  const active = homeItems[activeIndex] ?? homeItems[0];
 
   const handleSelect = useCallback((index) => goTo(index), [goTo]);
 
@@ -96,7 +99,7 @@ export default function Home() {
               {loop.map((item) => (
                 <NameItem
                   key={item.key}
-                  project={item.project}
+                  item={item.item}
                   active={item.index === activeIndex}
                   ariaHidden={item.ghost}
                   onSelect={() => handleSelect(item.index)}
@@ -110,7 +113,7 @@ export default function Home() {
               {loop.map((item) => (
                 <Slide
                   key={item.key}
-                  project={item.project}
+                  item={item.item}
                   format={item.format}
                   active={item.index === activeIndex}
                   ariaHidden={item.ghost}
@@ -142,7 +145,7 @@ export default function Home() {
         </div>
       )}
 
-      {view === "grid" && <GridView projects={projects} />}
+      {view === "grid" && <GridView items={homeItems} />}
 
       <div className={styles.bottom}>
         <div className={styles.toggle} role="tablist" aria-label="Work view">

@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { projects } from "../../data/projects.js";
+import { workItems } from "../../data/homeItems.js";
 import { GridView } from "../Home/GridView.jsx";
 import styles from "./Work.module.css";
 
@@ -17,12 +17,12 @@ export default function Work() {
       <section className={styles.intro}>
         <p className={styles.eyebrow}>
           <span>Index</span>
-          <span>{projects.length} projects</span>
+          <span>{workItems.length} projects</span>
         </p>
         <h1 className={styles.title}>Selected Work</h1>
       </section>
 
-      <GridView projects={projects} />
+      <GridView items={workItems} />
     </main>
   );
 }
