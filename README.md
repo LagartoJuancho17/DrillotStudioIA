@@ -36,7 +36,10 @@ Dos pasos, sin tocar ningún componente:
   category: "Ilustración",   // opcional
   year: "2026",              // opcional
   favorite: true,            // opcional: lo suma a /favorites
-  cover: { src: "/img/lab/miProyecto/portada.jpg", w: 2848, h: 1696 },
+  cover: {
+    src: "/img/lab/miProyecto/portada.jpg", w: 2848, h: 1696,
+    video: "/img/lab/miProyecto/portada.mp4",   // opcional
+  },
   images: [
     { src: "/img/lab/miProyecto/img1.jpg", w: 2848, h: 1696 },
   ],
@@ -52,6 +55,28 @@ Esa unión vive en [`src/data/homeItems.js`](src/data/homeItems.js). Si algún d
 Conviene poner `w` y `h`: reservan la caja antes de que cargue la imagen y evitan que la grilla salte. Se sacan con `sips -g pixelWidth -g pixelHeight archivo.jpg`.
 
 Para las imágenes, WebP o JPG con el lado largo en ~1600px alcanza. Las de `newArt` están en 2848px y ~1MB cada una: se ven bien pero hacen la página más pesada de lo necesario.
+
+## Video en hover
+
+Cualquier imagen puede llevar un `video`. Al pasar el mouse se reproduce sobre la imagen, que queda de póster; al salir, se pausa y rebobina. Un badge con un anillo que late avisa cuáles se mueven, y desaparece mientras reproduce. En touch no hay hover: ahí arranca mientras la pieza esté a la vista.
+
+El video **no se descarga hasta que alguien lo mira**. El `src` se monta recién en la primera interacción, porque `preload="none"` solo no alcanza: varios navegadores piden igual los metadatos, y con una grilla llena eso serían muchas descargas para algo que quizá nadie mire.
+
+Conviene que sea mudo, corto y liviano. El `portadaVideo.mp4` original pesaba 38MB, inviable para un preview; comprimido a 1280px quedó en 3.1MB:
+
+```bash
+ffmpeg -i original.mp4 -an -vf "scale=1280:-2" -c:v libx264 -crf 27 \
+  -preset slow -pix_fmt yuv420p -movflags +faststart salida.mp4
+```
+
+`-an` saca el audio (no sirve en un hover), `-movflags +faststart` deja que empiece sin bajar el archivo entero.
+
+**Dónde va cada versión.** Todo lo que está en `public/` se copia tal cual al build, así que un master pesado ahí se publica aunque nadie lo use: con el original de 38MB adentro, `dist/` pesaba 51MB en vez de 11MB. Además quedaría para siempre en el historial de git.
+
+- `public/img/` — la versión comprimida, la que sirve el sitio. Va a git.
+- `media-src/` — los masters sin comprimir. Ignorado por git y fuera del build.
+
+Guardá ahí los originales por si algún día tenés que reexportar.
 
 ## Elegir qué va en Favorites
 

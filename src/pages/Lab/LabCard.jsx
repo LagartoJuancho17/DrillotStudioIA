@@ -2,6 +2,7 @@ import { memo } from "react";
 import { Link } from "react-router-dom";
 import { normalizeImage } from "../../data/labProjects.js";
 import { useReveal } from "../../hooks/useReveal.js";
+import { HoverMedia } from "../../components/HoverMedia/HoverMedia.jsx";
 import styles from "./Lab.module.css";
 
 /* Portada de un mini proyecto. Se revela sola al entrar en viewport, así la
@@ -27,16 +28,15 @@ function LabCardBase({ project, eager, open, onTouchOpen }) {
         .join(" ")}
       onClick={onTouchOpen}
     >
-      <div className={styles.media}>
-        <img
-          src={cover.src}
-          alt={project.name}
-          width={cover.w || undefined}
-          height={cover.h || undefined}
-          loading={eager ? "eager" : "lazy"}
-          decoding="async"
-        />
-      </div>
+      <HoverMedia
+        className={styles.media}
+        src={cover.src}
+        video={cover.video}
+        alt={project.name}
+        width={cover.w}
+        height={cover.h}
+        loading={eager ? "eager" : "lazy"}
+      />
 
       <figcaption className={styles.caption}>
         <span className={styles.captionTitle}>{project.name}</span>

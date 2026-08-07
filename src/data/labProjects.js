@@ -24,6 +24,17 @@
    La segunda es mejor: con w y h el navegador reserva la caja antes de que
    cargue la imagen y la grilla no salta. Para averiguarlas:
      sips -g pixelWidth -g pixelHeight archivo.jpg
+
+   Cualquier imagen puede llevar además un `video`, que se reproduce al pasar
+   el mouse (y en touch, mientras esté a la vista). La imagen queda de póster,
+   así que el video no se descarga hasta que alguien lo mira:
+
+     { src: "/img/lab/x/1.jpg", w: 2848, h: 1696,
+       video: "/img/lab/x/1.mp4" }
+
+   Conviene que el video sea mudo, corto y liviano. Para dejarlo listo:
+     ffmpeg -i original.mp4 -an -vf "scale=1280:-2" -c:v libx264 -crf 27 \
+       -preset slow -pix_fmt yuv420p -movflags +faststart salida.mp4
 */
 
 export const labProjects = [
@@ -33,7 +44,12 @@ export const labProjects = [
     category: "",
     year: "",
     favorite: true,
-    cover: { src: "/img/lab/newArt/portada.jpg", w: 2848, h: 1696 },
+    cover: {
+      src: "/img/lab/newArt/portada.jpg",
+      w: 2848,
+      h: 1696,
+      video: "/img/lab/newArt/portadaVideo.mp4",
+    },
     images: [
       { src: "/img/lab/newArt/img1.jpg", w: 2848, h: 1696 },
       { src: "/img/lab/newArt/img2.jpg", w: 2848, h: 1696 },

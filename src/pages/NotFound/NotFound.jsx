@@ -1,11 +1,9 @@
-import { useEffect } from "react";
 import { Link } from "react-router-dom";
+import { usePageTitle } from "../../hooks/usePageTitle.js";
 import styles from "./NotFound.module.css";
 
 export default function NotFound() {
-  useEffect(() => {
-    document.title = "404 — Obys";
-  }, []);
+  usePageTitle("404");
 
   return (
     <main className={styles.root}>

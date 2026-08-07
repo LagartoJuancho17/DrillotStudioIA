@@ -2,3 +2,8 @@ node_modules
 dist
 .DS_Store
 *.log
+
+# Masters de video/imagen sin comprimir. Viven acá para no entrar al build
+# (todo lo de public/ se copia a dist/) ni quedar pesando para siempre en el
+# historial de git. La versión que sirve el sitio va en public/img/.
+media-src/

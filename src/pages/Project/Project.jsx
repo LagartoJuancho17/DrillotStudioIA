@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { Link, Navigate, useParams } from "react-router-dom";
 import { projects, findProjectIndex } from "../../data/projects.js";
+import { usePageTitle } from "../../hooks/usePageTitle.js";
 import styles from "./Project.module.css";
 
 /* Ficha de proyecto. Una sola plantilla para los 19, alimentada por el slug.
@@ -14,8 +15,9 @@ export default function Project() {
   const index = findProjectIndex(slug);
   const project = index >= 0 ? projects[index] : null;
 
+  usePageTitle(project?.name);
+
   useEffect(() => {
-    if (project) document.title = `${project.name} — Obys`;
     window.scrollTo(0, 0);
   }, [project]);
 

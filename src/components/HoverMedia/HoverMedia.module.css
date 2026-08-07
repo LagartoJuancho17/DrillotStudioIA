@@ -1,0 +1,124 @@
+.root {
+  position: relative;
+  overflow: hidden;
+  background: var(--grey-03);
+}
+
+.root img,
+.root video {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* El video se monta encima de la imagen y aparece recién cuando empieza a
+   reproducirse de verdad, no al pedirlo: si no, se ve un salto negro mientras
+   busca el primer fotograma. */
+.video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 0.45s var(--ease-out-quad);
+  pointer-events: none;
+}
+
+.videoPlaying {
+  opacity: 1;
+}
+
+/* ---------- Señal de que hay video ----------
+   Sin esto no hay forma de saber qué piezas se mueven. El anillo late despacio
+   para llamar el ojo sin competir con la obra. */
+.badge {
+  position: absolute;
+  left: 1.6rem;
+  bottom: 1.6rem;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  padding: 0.9rem 1.4rem 0.9rem 1rem;
+  border-radius: 100px;
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: var(--white);
+  font-size: 1.1rem;
+  line-height: 1;
+  pointer-events: none;
+  transition: opacity 0.4s var(--ease-out-quad), transform 0.5s var(--ease-obys);
+}
+
+.dot {
+  position: relative;
+  width: 1.6rem;
+  height: 1.6rem;
+  flex: none;
+  border-radius: 50%;
+  background: var(--white);
+}
+
+/* Triángulo de play, dibujado con bordes para no depender de un icono. */
+.dot::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 54%;
+  transform: translate(-50%, -50%);
+  border-style: solid;
+  border-width: 0.4rem 0 0.4rem 0.62rem;
+  border-color: transparent transparent transparent var(--black);
+}
+
+/* Anillo que late hacia afuera: es la invitación a pasar el mouse. */
+.dot::after {
+  content: "";
+  position: absolute;
+  inset: -0.5rem;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.85);
+  animation: ring 2.2s var(--ease-out-quad) infinite;
+}
+
+@keyframes ring {
+  0% {
+    transform: scale(0.7);
+    opacity: 0.9;
+  }
+  70% {
+    transform: scale(1.5);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1.5);
+    opacity: 0;
+  }
+}
+
+/* Ya reproduciendo, la invitación sobra: se va sin ruido. */
+.badgeHidden {
+  opacity: 0;
+  transform: translateY(0.6rem);
+}
+
+@media (max-width: 900px) {
+  .badge {
+    left: 1.2rem;
+    bottom: 1.2rem;
+    font-size: 1.2rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dot::after {
+    animation: none;
+    opacity: 0.5;
+    transform: scale(1.1);
+  }
+  .video {
+    transition: none;
+  }
+}

@@ -6,6 +6,8 @@ import {
   normalizeImage,
 } from "../../data/labProjects.js";
 import { useReveal } from "../../hooks/useReveal.js";
+import { usePageTitle } from "../../hooks/usePageTitle.js";
+import { HoverMedia } from "../../components/HoverMedia/HoverMedia.jsx";
 import styles from "./LabProject.module.css";
 
 function Shot({ image, index, total }) {
@@ -17,13 +19,13 @@ function Shot({ image, index, total }) {
       ref={ref}
       className={`${styles.figure} ${revealed ? styles.figureIn : ""}`}
     >
-      <img
+      <HoverMedia
         src={img.src}
+        video={img.video}
         alt=""
-        width={img.w || undefined}
-        height={img.h || undefined}
+        width={img.w}
+        height={img.h}
         loading={index === 0 ? "eager" : "lazy"}
-        decoding="async"
       />
       <span className={styles.index}>
         {String(index + 1).padStart(2, "0")} / {String(total).padStart(2, "0")}
@@ -37,8 +39,9 @@ export default function LabProject() {
   const index = findLabProjectIndex(slug);
   const project = index >= 0 ? labProjects[index] : null;
 
+  usePageTitle(project ? `${project.name} — Lab` : undefined);
+
   useEffect(() => {
-    if (project) document.title = `${project.name} — Lab — Obys`;
     window.scrollTo(0, 0);
   }, [project]);
 

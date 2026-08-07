@@ -7,6 +7,7 @@ import {
   more,
   typographyCredit,
 } from "../../data/about.js";
+import { usePageTitle } from "../../hooks/usePageTitle.js";
 import styles from "./About.module.css";
 
 const GalleryItem = memo(function GalleryItem({ item, eager, open, onTouchOpen }) {
@@ -41,8 +42,9 @@ export default function About() {
   const [openIndex, setOpenIndex] = useState(null);
   const [isTouch, setIsTouch] = useState(false);
 
+  usePageTitle("About");
+
   useEffect(() => {
-    document.title = "About — Obys";
     setIsTouch(!window.matchMedia("(hover: hover)").matches);
   }, []);
 

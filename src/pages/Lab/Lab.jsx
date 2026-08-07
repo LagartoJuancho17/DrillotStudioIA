@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { labProjects } from "../../data/labProjects.js";
 import { LabCard } from "./LabCard.jsx";
+import { usePageTitle } from "../../hooks/usePageTitle.js";
 import styles from "./Lab.module.css";
 
 /* Índice de los mini proyectos. Contenedor: sólo decide qué datos van y
@@ -10,8 +11,9 @@ export default function Lab() {
   const [openSlug, setOpenSlug] = useState(null);
   const [isTouch, setIsTouch] = useState(false);
 
+  usePageTitle("Lab");
+
   useEffect(() => {
-    document.title = "Lab — Obys";
     setIsTouch(!window.matchMedia("(hover: hover)").matches);
   }, []);
 

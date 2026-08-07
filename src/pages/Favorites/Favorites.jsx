@@ -1,7 +1,7 @@
-import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { favoriteItems } from "../../data/homeItems.js";
 import { GridView } from "../Home/GridView.jsx";
+import { usePageTitle } from "../../hooks/usePageTitle.js";
 import styles from "./Favorites.module.css";
 
 /* Selección destacada. Muestra sólo lo marcado con `favorite: true`, venga de
@@ -9,9 +9,7 @@ import styles from "./Favorites.module.css";
    Grid de la home: son la misma grilla, no dos parecidas que se desincronizan. */
 
 export default function Favorites() {
-  useEffect(() => {
-    document.title = "Favorites — Obys";
-  }, []);
+  usePageTitle("Favorites");
 
   return (
     <main className={styles.root}>

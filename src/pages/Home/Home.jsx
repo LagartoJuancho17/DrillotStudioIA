@@ -5,6 +5,7 @@ import { useCarousel } from "../../hooks/useCarousel.js";
 import { useLockBodyScroll } from "../../hooks/useLockBodyScroll.js";
 import { homeItems } from "../../data/homeItems.js";
 import { GridView } from "./GridView.jsx";
+import { usePageTitle } from "../../hooks/usePageTitle.js";
 import styles from "./Home.module.css";
 
 /* Los cinco formatos que el sitio original alterna en ciclo, medidos del DOM
@@ -56,6 +57,10 @@ const NameItem = memo(function NameItem({ item, active, onSelect, ariaHidden }) 
 });
 
 export default function Home() {
+  // Sin título propio, volver al inicio dejaba colgado el de la página
+  // anterior: en una SPA nadie lo reinicia solo.
+  usePageTitle();
+
   const [view, setView] = useState("vertical");
   const horizontal = view === "horizontal";
   const carouselOn = view !== "grid";
