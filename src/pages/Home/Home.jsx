@@ -153,7 +153,11 @@ export default function Home() {
   const handleSelect = useCallback((index) => goTo(index), [goTo]);
 
   return (
-    <main className={`${styles.root} ${horizontal ? styles.horizontal : ""}`}>
+    <main
+      className={`${styles.root} ${horizontal ? styles.horizontal : ""} ${
+        view === "grid" ? styles.isGrid : ""
+      }`}
+    >
       {carouselOn && (
         <div className={styles.viewport}>
           <aside className={styles.list} aria-label="Selected work">
