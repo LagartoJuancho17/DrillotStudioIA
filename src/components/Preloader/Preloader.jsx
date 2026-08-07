@@ -89,7 +89,7 @@ export function Preloader({ onDone }) {
 
       ctx = gsap.context(() => {
         const openX = () =>
-          (markRef.current?.getBoundingClientRect().width || 200) * 0.44;
+          (markRef.current?.getBoundingClientRect().width || 200) * 0.28;
 
         // 1. Animación inicial de entrada del isotipo
         gsap.fromTo(

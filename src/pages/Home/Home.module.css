@@ -145,8 +145,8 @@
   position: absolute;
   top: 50%;
   left: 50%;
-  width: 27rem;
-  height: 27rem;
+  width: 20rem;
+  height: 20rem;
   transform: translate(-50%, -50%);
   color: var(--black);
   pointer-events: none;
@@ -157,24 +157,23 @@
   height: 100%;
   overflow: visible;
 }
-/* Las mitades separadas enmarcan la imagen activa. Es el estado final de la
-   animación del preloader. */
+/* Las mitades separadas enmarcan la imagen activa. */
 .mark [data-half="l"] {
-  transform: translateX(-44%);
+  transform: translateX(-28%);
 }
 .mark [data-half="r"] {
-  transform: translateX(44%);
+  transform: translateX(28%);
 }
 
 /* ---------- About ---------- */
 .about {
   position: absolute;
-  top: calc(var(--header-h) + 8rem);
+  top: calc(var(--header-h) + 2.4rem);
   right: var(--edge);
   width: var(--col-right-w);
   font-size: 1.3rem;
   line-height: 1.5;
-  z-index: 2;
+  z-index: 20;
 }
 .aboutCopy {
   max-width: 40rem;
