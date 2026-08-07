@@ -10,6 +10,10 @@
      name      obligatorio. Título visible.
      category  opcional. Sale bajo el título.
      year      opcional. Sale arriba a la derecha.
+     favorite  opcional. true lo suma a la sección Favorites. Sacalo o ponelo
+               en false y el proyecto sigue existiendo igual, con su ficha y su
+               lugar en /lab y en el carrusel de la home: sólo deja de estar
+               destacado.
      cover     obligatorio. La imagen de la grilla.
      images    las imágenes de la ficha, en orden.
 
@@ -28,6 +32,7 @@ export const labProjects = [
     name: "New Art",
     category: "",
     year: "",
+    favorite: true,
     cover: { src: "/img/lab/newArt/portada.jpg", w: 2848, h: 1696 },
     images: [
       { src: "/img/lab/newArt/img1.jpg", w: 2848, h: 1696 },

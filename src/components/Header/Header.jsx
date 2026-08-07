@@ -5,7 +5,7 @@ import { useLockBodyScroll } from "../../hooks/useLockBodyScroll.js";
 import styles from "./Header.module.css";
 
 const LINKS = [
-  { to: "/work", label: "Work" },
+  { to: "/favorites", label: "Favorites" },
   { to: "/about", label: "About" },
   { to: "/lab", label: "Lab" },
 ];

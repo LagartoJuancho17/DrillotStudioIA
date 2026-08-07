@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { Link, Navigate, useParams } from "react-router-dom";
 import { projects, findProjectIndex } from "../../data/projects.js";
-import styles from "./WorkProject.module.css";
+import styles from "./Project.module.css";
 
 /* Ficha de proyecto. Una sola plantilla para los 19, alimentada por el slug.
 
@@ -9,7 +9,7 @@ import styles from "./WorkProject.module.css";
    que la página dice qué es y enlaza al caso original en vez de fabricar
    narrativa de cliente. */
 
-export default function WorkProject() {
+export default function Project() {
   const { slug } = useParams();
   const index = findProjectIndex(slug);
   const project = index >= 0 ? projects[index] : null;
@@ -19,7 +19,7 @@ export default function WorkProject() {
     window.scrollTo(0, 0);
   }, [project]);
 
-  if (!project) return <Navigate to="/work" replace />;
+  if (!project) return <Navigate to="/favorites" replace />;
 
   const total = projects.length;
   const prev = projects[(index - 1 + total) % total];
@@ -62,7 +62,7 @@ export default function WorkProject() {
       </section>
 
       <nav className={styles.pager} aria-label="Más proyectos">
-        <Link to={`/work/${prev.slug}`} className={styles.pagerLink}>
+        <Link to={`/favorites/${prev.slug}`} className={styles.pagerLink}>
           <span className={styles.pagerArrow}>←</span>
           <span className={styles.pagerCopy}>
             <span className={styles.pagerLabel}>Previous</span>
@@ -73,7 +73,7 @@ export default function WorkProject() {
         </Link>
 
         <Link
-          to={`/work/${next.slug}`}
+          to={`/favorites/${next.slug}`}
           className={`${styles.pagerLink} ${styles.pagerNext}`}
         >
           <span className={`${styles.pagerCopy} ${styles.pagerCopyRight}`}>

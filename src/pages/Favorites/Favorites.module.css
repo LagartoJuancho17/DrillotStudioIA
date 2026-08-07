@@ -23,6 +23,22 @@
   line-height: 1;
 }
 
+.empty {
+  padding: 0 var(--edge) 12rem;
+  font-size: 1.4rem;
+  line-height: 1.6;
+  opacity: 0.6;
+  max-width: 62rem;
+}
+.empty code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  background: var(--grey-03);
+  padding: 0.2em 0.4em;
+}
+.empty a {
+  border-bottom: 1px solid currentColor;
+}
+
 @media (max-width: 900px) {
   .intro {
     padding: calc(var(--header-h) + 3rem) var(--edge) 3rem;

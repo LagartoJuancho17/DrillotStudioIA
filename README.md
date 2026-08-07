@@ -17,8 +17,8 @@ Queda en `http://localhost:4123`. Para el build de producción: `npm run build` 
 |---|---|
 | `/` | Home: carrusel infinito con scroll interceptado |
 | `/about` | Estudio, galería y datos |
-| `/work` | Índice de los 19 proyectos |
-| `/work/:slug` | Ficha de proyecto |
+| `/favorites` | Selección destacada |
+| `/favorites/:slug` | Ficha de proyecto |
 | `/lab` | **Propio.** Grilla de mini proyectos a color |
 | `/lab/:slug` | Ficha de un mini proyecto |
 
@@ -35,6 +35,7 @@ Dos pasos, sin tocar ningún componente:
   name: "Mi Proyecto",
   category: "Ilustración",   // opcional
   year: "2026",              // opcional
+  favorite: true,            // opcional: lo suma a /favorites
   cover: { src: "/img/lab/miProyecto/portada.jpg", w: 2848, h: 1696 },
   images: [
     { src: "/img/lab/miProyecto/img1.jpg", w: 2848, h: 1696 },
@@ -44,13 +45,28 @@ Dos pasos, sin tocar ningún componente:
 
 Con eso el proyecto aparece en tres lugares a la vez, sin tocar nada más: **el carrusel de la home**, la grilla de `/lab` y su propia ficha en `/lab/<slug>`. La navegación anterior/siguiente también se arma sola.
 
-En la home los proyectos de Lab van **primero**, delante de los de Obys, porque son obra propia. La numeración del carrusel se recalcula sobre la lista combinada, así que es correlativa (`01` es el primero de Lab). Cada pieza sabe a dónde lleva: las de Lab a `/lab/<slug>` y las de Obys a `/work/<slug>`. La grilla de `/work` sigue mostrando sólo los de Obys, con su numeración original.
+En la home los proyectos de Lab van **primero**, delante de los de Obys, porque son obra propia. La numeración del carrusel se recalcula sobre la lista combinada, así que es correlativa (`01` es el primero de Lab). Cada pieza sabe a dónde lleva: las de Lab a `/lab/<slug>` y las de Obys a `/favorites/<slug>`. La grilla de `/favorites` muestra sólo lo marcado como favorito.
 
 Esa unión vive en [`src/data/homeItems.js`](src/data/homeItems.js). Si algún día querés que la home muestre **sólo** lo tuyo, se borra el spread de `projects` de ahí y listo.
 
 Conviene poner `w` y `h`: reservan la caja antes de que cargue la imagen y evitan que la grilla salte. Se sacan con `sips -g pixelWidth -g pixelHeight archivo.jpg`.
 
 Para las imágenes, WebP o JPG con el lado largo en ~1600px alcanza. Las de `newArt` están en 2848px y ~1MB cada una: se ven bien pero hacen la página más pesada de lo necesario.
+
+## Elegir qué va en Favorites
+
+Cada proyecto lleva un campo `favorite`. En `true` aparece en `/favorites`; sacándolo o poniéndolo en `false` deja de estar destacado, pero **sigue existiendo**: mantiene su ficha y su lugar en el carrusel de la home.
+
+- Proyectos de Obys: `src/data/projects.js`
+- Mini proyectos propios: `src/data/labProjects.js`
+
+```js
+{ n: "03", slug: "autex", name: "Autex", ..., favorite: false }
+```
+
+La numeración de la sección se recalcula sobre la selección, así que no quedan huecos al desmarcar uno.
+
+La sección antes se llamaba Work. Los enlaces viejos (`/work` y `/work/<slug>`) redirigen solos y conservan el proyecto.
 
 ## Arquitectura
 
