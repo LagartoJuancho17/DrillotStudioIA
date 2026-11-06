@@ -7,3 +7,7 @@ dist
 # (todo lo de public/ se copia a dist/) ni quedar pesando para siempre en el
 # historial de git. La versión que sirve el sitio va en public/img/.
 media-src/
+
+# Modelo de MediaPipe (~8MB). Lo baja `npm run hands:model`; si falta, el
+# sitio lo pide al bucket de Google.
+public/models/

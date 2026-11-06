@@ -1,7 +1,9 @@
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { BracketMark } from "../../components/Marks.jsx";
+import { HandHud } from "../../components/HandHud/HandHud.jsx";
 import { useCarousel } from "../../hooks/useCarousel.js";
+import { useHandControl } from "../../hooks/useHandControl.js";
 import { useLockBodyScroll } from "../../hooks/useLockBodyScroll.js";
 import { homeItems } from "../../data/homeItems.js";
 import { GridView } from "./GridView.jsx";
@@ -30,6 +32,34 @@ const resolveFormat = (item, index) => {
 
 const SETS = 3;
 const VIEWS = ["vertical", "horizontal", "grid"];
+
+/* Control con las manos. El tracker devuelve desplazamientos en unidades de
+   imagen (0..1); esto los pasa a píxeles del carrusel. Con 2.2, recorrer media
+   imagen con la mano mueve ~1 pantalla: varios proyectos por gesto amplio,
+   uno con un gesto corto. */
+const HAND_GAIN = 2.2;
+const HANDS_KEY = "drillot:hands";
+
+/* Se recuerda por sesión: al entrar a un proyecto y volver, la cámara sigue
+   activa sin tener que prenderla de nuevo. `?hands` en la URL la prende de
+   entrada, útil para presentar. */
+function initialHands() {
+  try {
+    if (new URLSearchParams(window.location.search).has("hands")) return true;
+    return sessionStorage.getItem(HANDS_KEY) === "1";
+  } catch {
+    return false;
+  }
+}
+
+const HAND_ICON = (
+  <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M4 7.5V3.2a1 1 0 0 1 2 0V7" />
+    <path d="M6 6.5V2.2a1 1 0 0 1 2 0v4.3" />
+    <path d="M8 6.5V3a1 1 0 0 1 2 0v4.5" />
+    <path d="M10 7V5a1 1 0 0 1 2 0v3.5A4.5 4.5 0 0 1 7.5 13h-.3a4 4 0 0 1-3.3-1.8L2.2 8.6a1 1 0 0 1 1.6-1.2L4 7.6" />
+  </svg>
+);
 
 const VIEW_ICONS = {
   vertical: (
@@ -139,10 +169,62 @@ export default function Home() {
     return () => window.removeEventListener("resize", lockMobileView);
   }, []);
 
-  const { stripRef, listRef, activeIndex, goTo } = useCarousel({
+  const { stripRef, listRef, activeIndex, goTo, scrollBy, release } = useCarousel({
     count: homeItems.length,
     horizontal,
     enabled: carouselOn,
+  });
+
+  /* ---------- manos ---------- */
+
+  const navigate = useNavigate();
+  const [handsOn, setHandsOn] = useState(initialHands);
+  const activeIndexRef = useRef(activeIndex);
+  activeIndexRef.current = activeIndex;
+
+  useEffect(() => {
+    try {
+      sessionStorage.setItem(HANDS_KEY, handsOn ? "1" : "0");
+    } catch {
+      /* storage bloqueado: sólo se pierde el recuerdo entre páginas */
+    }
+  }, [handsOn]);
+
+  const toggleHands = useCallback(() => setHandsOn((on) => !on), []);
+
+  // Atajo "H", salvo que se esté escribiendo en un campo
+  useEffect(() => {
+    const onKey = (e) => {
+      if (e.key !== "h" && e.key !== "H") return;
+      if (e.metaKey || e.ctrlKey || e.altKey) return;
+      const el = e.target;
+      if (el && (el.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(el.tagName))) return;
+      toggleHands();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [toggleHands]);
+
+  const onHandScroll = useCallback(
+    (delta) => {
+      const size = horizontal ? window.innerWidth : window.innerHeight;
+      scrollBy(delta * size * HAND_GAIN);
+    },
+    [horizontal, scrollBy]
+  );
+
+  // Entra al proyecto que está centrado en el momento del puño
+  const onHandEnter = useCallback(() => {
+    const item = homeItems[activeIndexRef.current];
+    if (item?.to) navigate(item.to);
+  }, [navigate]);
+
+  const hands = useHandControl({
+    enabled: handsOn && carouselOn,
+    axis: horizontal ? "x" : "y",
+    onScroll: onHandScroll,
+    onRelease: release,
+    onEnter: onHandEnter,
   });
 
   // Mientras el carrusel intercepta la rueda, el documento no debe scrollear.
@@ -270,8 +352,25 @@ export default function Home() {
               {i < VIEWS.length - 1 && <span className={styles.toggleSep}>,</span>}
             </span>
           ))}
+          {carouselOn && (
+            <span className={styles.toggleGroup}>
+              <span className={styles.toggleSep}>·</span>
+              <button
+                type="button"
+                aria-pressed={handsOn}
+                className={`${styles.toggleBtn} ${handsOn ? styles.toggleOn : ""}`}
+                onClick={toggleHands}
+                title="Control with your hands (H)"
+              >
+                <span className={styles.toggleIcon}>{HAND_ICON}</span>
+                <span className={styles.toggleText}>Hands</span>
+              </button>
+            </span>
+          )}
         </div>
       </div>
+
+      {handsOn && carouselOn && <HandHud {...hands} />}
     </main>
   );
 }

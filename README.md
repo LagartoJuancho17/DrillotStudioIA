@@ -146,3 +146,45 @@ Se navega con rueda, gesto táctil, flechas del teclado o clickeando un nombre.
 - **Fichas de proyecto:** no se inventó contenido de caso de estudio. Cada una dice qué es y enlaza al caso real en obys.agency.
 - **Reloj del header:** el sitio real muestra la hora del estudio. Acá se quitó a pedido.
 - **Vista Horizontal** del toggle y las constantes de velocidad e interpolación del scroll: interpretación propia. La mecánica sí está medida del original; esos números concretos se ajustaron a ojo.
+
+## Control con las manos (MediaPipe)
+
+En la home se puede navegar el carrusel con la mano frente a la cámara:
+
+| Gesto | Qué hace |
+|---|---|
+| Mano abierta, subirla o bajarla | Scrollea entre proyectos (en vista horizontal, moverla a los costados) |
+| Puño sostenido ~0.5 s | Entra al proyecto activo |
+| Sacar la mano o cerrarla | El carrusel se acomoda en el proyecto más cercano |
+
+Se prende con el botón **Hands** de la barra inferior o con la tecla **H**. Queda recordado durante la sesión, así al entrar a un proyecto y volver sigue activo. `/?hands` en la URL lo prende de entrada, útil para presentar. Abajo a la derecha aparece la cámara con la mano dibujada y el progreso del puño.
+
+La cámara pide permiso y sólo funciona en `localhost` o HTTPS. No es para mobile: el HUD y el botón se ocultan debajo de 900px.
+
+**Para presentar sin internet**, bajar el modelo una vez:
+
+```bash
+npm run hands:model
+```
+
+Queda en `public/models/gesture_recognizer.task` (~8MB, fuera de git). Sin él, el sitio lo pide al bucket oficial de Google la primera vez que se activan las manos. El runtime WASM ya viene de `node_modules` y entra al build, así que no depende de ningún CDN. Nada de MediaPipe se descarga hasta que alguien prende las manos.
+
+### Cómo está armado
+
+- [`src/gestures/handGestures.js`](src/gestures/handGestures.js): lógica pura, de landmarks a acciones. Detecta el puño con el clasificador de MediaPipe (`Closed_Fist`) y, cuando el clasificador no opina, por geometría (punta del dedo más cerca de la muñeca que el nudillo, en 3 de 4 dedos). El scroll sigue el centro de la palma, que no se mueve al cerrar la mano, así el puño no se lee como scroll.
+- [`src/gestures/recognizer.js`](src/gestures/recognizer.js): carga el `GestureRecognizer` (GPU, con fallback a CPU).
+- [`src/hooks/useHandControl.js`](src/hooks/useHandControl.js): cámara, bucle por frame y HUD. Como el carrusel, no pasa por React en cada frame.
+- `useCarousel` expone `scrollBy` y `release`: la mano entra por el mismo camino que la rueda y el touch.
+
+Ajustes finos: `HAND_GAIN` en [`Home.jsx`](src/pages/Home/Home.jsx) (cuánto scrollea la mano) y `DEFAULTS` en `handGestures.js` (tiempo del puño, zona muerta, suavizado).
+
+### Tests y eval
+
+```bash
+npm test               # 18 tests de la lógica de gestos, <1 s
+npm run eval:gestures  # barrido de miles de manos sintéticas con umbrales
+```
+
+El eval mide precisión de pose con rotación, escala y ruido; scroll fantasma con la mano quieta; dirección del scroll; y que un puño corto nunca entre. Usa manos sintéticas ([`fixtures.js`](src/gestures/fixtures.js)), no grabaciones reales.
+
+En desarrollo, `window.__handControl.feed(frame)` inyecta frames sin cámara para probar el flujo completo en el navegador.

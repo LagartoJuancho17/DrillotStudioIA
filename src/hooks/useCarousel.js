@@ -220,6 +220,25 @@ export function useCarousel({ count, horizontal = false, enabled = true }) {
     [cancelSnap, count, fractionalIndex, start]
   );
 
+  /* ---------- entrada externa (gestos de mano) ---------- */
+
+  /* Mismo camino que la rueda y el touch: mover `target` y dejar que el rAF
+     interpole. Mientras la mano scrollea no hay snap; lo pide `release`
+     cuando la mano se cierra o sale de cuadro. */
+  const scrollBy = useCallback(
+    (delta) => {
+      if (!enabled || !delta) return;
+      cancelSnap();
+      target.current += delta;
+      start();
+    },
+    [enabled, cancelSnap, start]
+  );
+
+  const release = useCallback(() => {
+    if (enabled) scheduleSnap();
+  }, [enabled, scheduleSnap]);
+
   /* ---------- entrada del usuario ---------- */
 
   useEffect(() => {
@@ -344,5 +363,5 @@ export function useCarousel({ count, horizontal = false, enabled = true }) {
     cancelSnap();
   }, [stop, cancelSnap]);
 
-  return { stripRef, listRef, activeIndex, goTo };
+  return { stripRef, listRef, activeIndex, goTo, scrollBy, release };
 }

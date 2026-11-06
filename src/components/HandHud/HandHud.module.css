@@ -1,0 +1,98 @@
+/* Esquina inferior derecha, encima del footer. */
+.root {
+  --fist: 0;
+  position: fixed;
+  right: var(--edge);
+  bottom: 5.2rem;
+  z-index: 70;
+  width: 17rem;
+  font-size: 1.1rem;
+  pointer-events: none;
+}
+
+.frame {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  background: var(--black);
+}
+
+/* Espejado: la persona se ve como en un espejo, así mover la mano a la
+   derecha se ve a la derecha. Video y canvas se espejan juntos para que los
+   landmarks (en coordenadas de la imagen sin espejar) caigan en su lugar. */
+.video,
+.canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scaleX(-1);
+}
+
+.video {
+  opacity: 0.55;
+  filter: grayscale(1);
+}
+
+/* Progreso del puño: un borde que se llena de abajo hacia arriba. */
+.ring {
+  position: absolute;
+  inset: 0;
+  border: 2px solid transparent;
+  transition: border-color 0.2s var(--ease-out-quad);
+}
+
+.ring::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 3px;
+  background: #ff3b1f;
+  transform-origin: left center;
+  transform: scaleX(var(--fist));
+}
+
+.root[data-pose="open"] .ring {
+  border-color: var(--white);
+}
+
+.root[data-pose="fist"] .ring {
+  border-color: #ff3b1f;
+}
+
+.caption {
+  margin-top: 0.6rem;
+  color: var(--black);
+}
+
+.hintOpen,
+.hintFist,
+.hintNone {
+  display: none;
+}
+
+.root[data-pose="none"] .hintNone,
+.root[data-pose="open"] .hintOpen,
+.root[data-pose="fist"] .hintFist {
+  display: inline;
+}
+
+.root[data-status="loading"] .caption,
+.root[data-status="denied"] .caption,
+.root[data-status="error"] .caption {
+  color: var(--grey-01);
+}
+
+.root[data-status="denied"] .frame,
+.root[data-status="error"] .frame {
+  display: none;
+}
+
+@media (max-width: 900px) {
+  .root {
+    display: none;
+  }
+}
