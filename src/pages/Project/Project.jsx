@@ -1,7 +1,9 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { Link, Navigate, useParams } from "react-router-dom";
 import { projects, findProjectIndex } from "../../data/projects.js";
 import { usePageTitle } from "../../hooks/usePageTitle.js";
+import { useProjectEntrance } from "../../hooks/useProjectEntrance.js";
+import { SplitWords } from "../../components/SplitWords/SplitWords.jsx";
 import styles from "./Project.module.css";
 
 /* Ficha de proyecto. Una sola plantilla para los 19, alimentada por el slug.
@@ -17,6 +19,10 @@ export default function Project() {
 
   usePageTitle(project?.name);
 
+  const rootRef = useRef(null);
+  const coverRef = useRef(null);
+  useProjectEntrance(rootRef, coverRef, slug);
+
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [project]);
@@ -28,21 +34,23 @@ export default function Project() {
   const next = projects[(index + 1) % total];
 
   return (
-    <main className={styles.root}>
+    <main className={styles.root} ref={rootRef}>
       <section className={styles.hero}>
-        <div className={styles.meta}>
+        <div className={styles.meta} data-reveal="">
           <span>{project.category}</span>
           <span className={styles.metaServices}>{project.services}</span>
           <span className={styles.metaNumber}>{project.n}</span>
         </div>
-        <h1 className={styles.title}>{project.name}</h1>
+        <h1 className={styles.title}>
+          <SplitWords text={project.name} />
+        </h1>
       </section>
 
-      <figure className={styles.image}>
+      <figure className={styles.image} ref={coverRef}>
         <img src={project.img} alt={project.name} loading="eager" />
       </figure>
 
-      <section className={styles.note}>
+      <section className={styles.note} data-reveal="">
         <p className={styles.noteLabel}>About this page</p>
         <div className={styles.noteBody}>
           <p className={styles.noteText}>

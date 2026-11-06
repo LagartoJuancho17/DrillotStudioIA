@@ -7,7 +7,7 @@
     "dev": "vite --port 4123",
     "build": "vite build",
     "preview": "vite preview --port 4123",
-    "test": "node --test \"src/gestures/*.test.js\"",
+    "test": "node --test \"src/**/*.test.js\"",
     "eval:gestures": "node src/gestures/handGestures.eval.js",
     "hands:model": "node scripts/fetch-hand-model.mjs"
   },

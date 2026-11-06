@@ -1,0 +1,15 @@
+/* La máscara recorta a la palabra mientras sube. El padding de abajo deja
+   lugar a los descendentes (g, p, y) que con line-height < 1 quedarían
+   cortados; el margen negativo lo compensa para no mover el layout. */
+.mask {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: top;
+  padding-bottom: 0.12em;
+  margin-bottom: -0.12em;
+}
+
+.word {
+  display: inline-block;
+  will-change: transform;
+}

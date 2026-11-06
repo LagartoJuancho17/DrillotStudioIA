@@ -147,6 +147,19 @@ Se navega con rueda, gesto táctil, flechas del teclado o clickeando un nombre.
 - **Reloj del header:** el sitio real muestra la hora del estudio. Acá se quitó a pedido.
 - **Vista Horizontal** del toggle y las constantes de velocidad e interpolación del scroll: interpretación propia. La mecánica sí está medida del original; esos números concretos se ajustaron a ojo.
 
+## Transición al abrir un proyecto
+
+Al entrar a un proyecto desde el carrusel (click en la imagen o puño), la imagen sale de la diapositiva, crece hasta llenar la pantalla con un leve zoom de cámara mientras el resto de la home se va (los vecinos se apagan, la lista se corre, el paréntesis se abre hacia afuera), y después baja hasta posarse exactamente sobre la portada del proyecto. El título entra palabra por palabra desde abajo mientras la imagen aterriza. Son unos 2.2 s en total.
+
+- [`src/transitions/projectTransition.js`](src/transitions/projectTransition.js): `openProject` (en la home) y `landProject` (en la página del proyecto). La capa que viaja es un nodo en `<body>` fuera de React, así sobrevive al cambio de ruta.
+- [`src/transitions/geometry.js`](src/transitions/geometry.js): en cada frame se interpola la ventana visible (`clip-path`) y se recalcula el cover de la imagen (`transform`). Así nunca aparece un borde vacío ni la imagen deformada. Sólo `transform` y `clip-path`: nada de layout.
+- [`src/hooks/useProjectEntrance.js`](src/hooks/useProjectEntrance.js) + [`SplitWords`](src/components/SplitWords/SplitWords.jsx): entrada del título y los metadatos. Corre también cuando se entra sin transición (desde Lab o el paginador), sin la imagen viajera.
+- Curvas en [`src/transitions/eases.js`](src/transitions/eases.js): `pt-out` es la misma que `--ease-obys`; `pt-in-out` es un ease-in-out fuerte para la imagen que se mueve.
+
+Cmd/ctrl-click sigue abriendo en otra pestaña. Con `prefers-reduced-motion` no hay viaje ni movimiento: se navega directo y el contenido está visible desde el primer frame. Mientras la imagen viaja, la rueda y las manos no mueven nada.
+
+Duraciones y zoom: `LEAVE_DURATION`, `LAND_DURATION` y `PEAK_ZOOM` al principio de `projectTransition.js`.
+
 ## Control con las manos (MediaPipe)
 
 En la home se puede navegar el carrusel con la mano frente a la cámara:
@@ -181,7 +194,7 @@ Ajustes finos: `HAND_GAIN` en [`Home.jsx`](src/pages/Home/Home.jsx) (cuánto scr
 ### Tests y eval
 
 ```bash
-npm test               # 18 tests de la lógica de gestos, <1 s
+npm test               # 27 tests (gestos + geometría de la transición), <1 s
 npm run eval:gestures  # barrido de miles de manos sintéticas con umbrales
 ```
 

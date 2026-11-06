@@ -5,6 +5,8 @@ import { HandHud } from "../../components/HandHud/HandHud.jsx";
 import { useCarousel } from "../../hooks/useCarousel.js";
 import { useHandControl } from "../../hooks/useHandControl.js";
 import { useLockBodyScroll } from "../../hooks/useLockBodyScroll.js";
+import { openProject } from "../../transitions/projectTransition.js";
+import { EASE_OUT } from "../../transitions/eases.js";
 import { homeItems } from "../../data/homeItems.js";
 import { GridView } from "./GridView.jsx";
 import { usePageTitle } from "../../hooks/usePageTitle.js";
@@ -95,7 +97,7 @@ const VIEW_ICONS = {
 
    Si el item tiene `video`, se reproduce cuando la diapositiva se activa (active).
    La imagen siempre está visible (es el fondo / poster). */
-const Slide = memo(function Slide({ item, format, active, ariaHidden }) {
+const Slide = memo(function Slide({ item, format, active, ariaHidden, onOpen }) {
   const videoRef = useRef(null);
 
   useEffect(() => {
@@ -108,9 +110,20 @@ const Slide = memo(function Slide({ item, format, active, ariaHidden }) {
     }
   }, [active, item.video]);
 
+  /* Click normal: la transición. Cmd/ctrl/shift/click del medio siguen
+     abriendo en otra pestaña o ventana, como cualquier link. */
+  const handleClick = (e) => {
+    if (e.defaultPrevented || e.button !== 0) return;
+    if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+    e.preventDefault();
+    onOpen?.(item, e.currentTarget);
+  };
+
   return (
     <Link
       to={item.to}
+      onClick={handleClick}
+      data-slide=""
       className={`${styles.slide} ${active ? styles.slideActive : ""}`}
       style={{ width: `${format.w}rem`, aspectRatio: String(format.ar) }}
       aria-label={item.name}
@@ -169,15 +182,53 @@ export default function Home() {
     return () => window.removeEventListener("resize", lockMobileView);
   }, []);
 
+  /* Mientras la imagen viaja hacia el proyecto, el carrusel no responde:
+     la rueda o la mano moverían la tira debajo de la imagen. */
+  const [leaving, setLeaving] = useState(false);
+
   const { stripRef, listRef, activeIndex, goTo, scrollBy, release } = useCarousel({
     count: homeItems.length,
     horizontal,
-    enabled: carouselOn,
+    enabled: carouselOn && !leaving,
   });
+
+  /* ---------- apertura de proyecto ---------- */
+
+  const rootRef = useRef(null);
+  const navigate = useNavigate();
+
+  /* Salida de la home mientras la imagen crece: lo que rodea a la imagen se
+     va primero (los vecinos de la tira, la lista, los textos) y el paréntesis
+     se abre hacia afuera, como si dejara salir a la imagen. */
+  const leave = useCallback((tl) => {
+    const root = rootRef.current;
+    if (!root) return;
+    const q = (sel) => Array.from(root.querySelectorAll(sel));
+    const others = q("[data-slide]").filter((el) => !el.dataset.opening);
+    tl.to(others, { opacity: 0, duration: 0.5, ease: EASE_OUT }, 0);
+    tl.to(q(`.${styles.listItem}`), { opacity: 0, x: -24, duration: 0.6, ease: EASE_OUT, stagger: 0.012 }, 0);
+    tl.to(q(`.${styles.mark}`), { scale: 1.8, opacity: 0, duration: 0.8, ease: EASE_OUT }, 0.05);
+    tl.to(q(`.${styles.about}, .${styles.meta}, .${styles.bottom}`), { opacity: 0, y: 12, duration: 0.5, ease: EASE_OUT, stagger: 0.04 }, 0);
+  }, []);
+
+  const open = useCallback(
+    (item, slideEl) => {
+      if (!item?.to) return;
+      if (slideEl) slideEl.dataset.opening = "1";
+      const started = openProject({
+        sourceEl: slideEl,
+        imgEl: slideEl?.querySelector("img"),
+        to: item.to,
+        navigate,
+        leave,
+      });
+      if (started) setLeaving(true);
+    },
+    [navigate, leave]
+  );
 
   /* ---------- manos ---------- */
 
-  const navigate = useNavigate();
   const [handsOn, setHandsOn] = useState(initialHands);
   const activeIndexRef = useRef(activeIndex);
   activeIndexRef.current = activeIndex;
@@ -215,12 +266,15 @@ export default function Home() {
 
   // Entra al proyecto que está centrado en el momento del puño
   const onHandEnter = useCallback(() => {
-    const item = homeItems[activeIndexRef.current];
-    if (item?.to) navigate(item.to);
-  }, [navigate]);
+    const i = activeIndexRef.current;
+    const item = homeItems[i];
+    // La diapositiva activa de la copia del medio (las otras son decorativas)
+    const slide = stripRef.current?.querySelector(`.${styles.slideActive}:not([aria-hidden])`);
+    open(item, slide);
+  }, [open, stripRef]);
 
   const hands = useHandControl({
-    enabled: handsOn && carouselOn,
+    enabled: handsOn && carouselOn && !leaving,
     axis: horizontal ? "x" : "y",
     onScroll: onHandScroll,
     onRelease: release,
@@ -273,6 +327,7 @@ export default function Home() {
 
   return (
     <main
+      ref={rootRef}
       className={`${styles.root} ${horizontal ? styles.horizontal : ""} ${
         view === "grid" ? styles.isGrid : ""
       }`}
@@ -302,6 +357,7 @@ export default function Home() {
                   format={item.format}
                   active={item.index === activeIndex}
                   ariaHidden={item.ghost}
+                  onOpen={open}
                 />
               ))}
             </div>

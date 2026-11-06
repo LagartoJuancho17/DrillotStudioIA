@@ -231,3 +231,9 @@
     transition: none;
   }
 }
+
+/* Portada que recibe la imagen del carrusel: ya está en su lugar, sin el
+   fundido de aparición (ver Shot en LabProject.jsx). */
+.figureInstant {
+  transition: box-shadow 0.5s var(--ease-obys);
+}

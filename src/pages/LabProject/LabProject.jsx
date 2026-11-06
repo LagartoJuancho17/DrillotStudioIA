@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from "react";
+import { forwardRef, useEffect, useMemo, useRef, useState } from "react";
 import { Link, Navigate, useParams } from "react-router-dom";
 import {
   labProjects,
@@ -8,16 +8,29 @@ import {
 import { useReveal } from "../../hooks/useReveal.js";
 import { usePageTitle } from "../../hooks/usePageTitle.js";
 import { HoverMedia } from "../../components/HoverMedia/HoverMedia.jsx";
+import { SplitWords } from "../../components/SplitWords/SplitWords.jsx";
+import { useProjectEntrance } from "../../hooks/useProjectEntrance.js";
+import { isLanding } from "../../transitions/projectTransition.js";
 import styles from "./LabProject.module.css";
 
-function Shot({ image, index, total }) {
-  const [ref, revealed] = useReveal({ threshold: 0.05 });
+/* La primera pieza es la portada: si se llega desde el carrusel, ahí aterriza
+   la imagen que viene viajando (`coverRef`) y entra ya visible (`instant`),
+   sin su fundido de aparición, que la haría saltar al recibir la imagen. */
+const Shot = forwardRef(function Shot({ image, index, total, instant }, coverRef) {
+  const [revealRef, revealed] = useReveal({ threshold: 0.05 });
   const img = normalizeImage(image);
+
+  const setRef = (el) => {
+    revealRef.current = el;
+    if (coverRef) coverRef.current = el;
+  };
 
   return (
     <figure
-      ref={ref}
-      className={`${styles.figure} ${revealed ? styles.figureIn : ""}`}
+      ref={setRef}
+      className={`${styles.figure} ${revealed || instant ? styles.figureIn : ""} ${
+        instant ? styles.figureInstant : ""
+      }`}
     >
       <HoverMedia
         src={img.src}
@@ -32,7 +45,7 @@ function Shot({ image, index, total }) {
       </span>
     </figure>
   );
-}
+});
 
 export default function LabProject() {
   const { slug } = useParams();
@@ -40,6 +53,12 @@ export default function LabProject() {
   const project = index >= 0 ? labProjects[index] : null;
 
   usePageTitle(project ? `${project.name} — Lab` : undefined);
+
+  const rootRef = useRef(null);
+  const coverRef = useRef(null);
+  // Se lee al montar: ¿viene una imagen del carrusel a posarse en la portada?
+  const [arriving] = useState(isLanding);
+  useProjectEntrance(rootRef, coverRef, slug);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -68,15 +87,17 @@ export default function LabProject() {
   });
 
   return (
-    <main className={styles.root}>
+    <main className={styles.root} ref={rootRef}>
       <section className={styles.hero}>
-        <div className={styles.meta}>
+        <div className={styles.meta} data-reveal="">
           <span>{project.category || "Lab"}</span>
           <span className={styles.metaNumber}>
             {project.year || `${shots.length} images`}
           </span>
         </div>
-        <h1 className={styles.title}>{project.name}</h1>
+        <h1 className={styles.title}>
+          <SplitWords text={project.name} />
+        </h1>
       </section>
 
       <section className={`${styles.images} ${allPortrait ? styles.imagesPortrait : ""}`}>
@@ -86,6 +107,8 @@ export default function LabProject() {
             image={image}
             index={i}
             total={shots.length}
+            ref={i === 0 ? coverRef : undefined}
+            instant={i === 0 && arriving}
           />
         ))}
       </section>
